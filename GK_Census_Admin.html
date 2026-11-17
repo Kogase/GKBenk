@@ -512,7 +512,6 @@ function sw(t){
   if(t==='pending') renderPending();
   if(t==='mover') renderMover();
   if(t==='pengurus') renderPengurus();
-  if(t==='pengurus') renderPengurus();
 }
 
 // ===== RENDER =====
@@ -734,6 +733,7 @@ function toggleDetail(id){
 
 // ===== APPROVE =====
 function openApprove(idx){
+  window._approveMode = 'kader';
   approveIdx = idx;
   const k = getData()[idx];
   document.getElementById('approve-sub').textContent = 'Verifikasi: ' + k.nama;
@@ -873,7 +873,7 @@ function renderStat(){
 
 
 // ===== MODAL =====
-function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); if(id==='modal-approve') window._approveMode='kader'; }
 function closeModalOuter(e,id){ if(e.target===document.getElementById(id)) closeModal(id); }
 
 // ===== SETTING =====
@@ -1073,7 +1073,6 @@ function renderPengurus(){
         <div class="kf-item"><div class="kf-label">Orang Tua</div><div class="kf-val">${esc(k.ortu||'—')}</div></div>
         <div class="kf-item"><div class="kf-label">Domisili</div><div class="kf-val">${esc(k.domisili||'—')}</div></div>
         <div class="kf-item"><div class="kf-label">HP</div><div class="kf-val">${esc(k.hp||'—')}</div></div>
-        <div class="kf-item"><div class="kf-label">Periode</div><div class="kf-val">2025–2030</div></div>
         <div class="kf-item"><div class="kf-label">Periode</div><div class="kf-val">${esc(k.periode||'—')}</div></div>
         <div class="kf-item"><div class="kf-label">Jenjang</div><div class="kf-val">${esc(k.jenjang||'—')}</div></div>
         <div class="kf-item"><div class="kf-label">Kampus</div><div class="kf-val">${esc(k.instansi||'—')}</div></div>
