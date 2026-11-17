@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#8B1A1A">
+<title>GK Census — Portal Anggota</title>
+<style>
+:root{--merah:#8B1A1A;--merah-tua:#6e1515;--merah-muda:#FCEBEB;--emas:#e8c84b;--emas-bg:#FAEEDA;--putih:#fff;--abu:#f5f5f5;--border:#e0e0e0;--teks:#1a1a1a;--teks2:#666;--teks3:#999;--radius:12px;--radius-sm:8px;--shadow:0 2px 12px rgba(0,0,0,.08)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0ede8}
+body{overflow-x:hidden}
+.app{max-width:480px;margin:0 auto;min-height:100vh;background:#f5f2ee;position:relative}
+
+/* TOPBAR */
+.topbar{background:linear-gradient(135deg,#8B1A1A 0%,#6e1515 100%);padding:max(14px,env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;gap:12px}
+.tb-logo{width:40px;height:40px;background:var(--emas);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--merah);flex-shrink:0}
+.tb-title{font-size:16px;font-weight:700;color:#fff}
+.tb-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
+
+/* SCREENS */
+.screen{display:none;padding:16px 14px 100px}
+.screen.active{display:block}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#8B1A1A,#6e1515);border-radius:var(--radius);padding:20px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;background:rgba(232,200,75,.1);border-radius:50%}
+.hero-tag{font-size:11px;font-weight:600;color:var(--emas);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5}
+
+/* CARD */
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:700;color:var(--teks);margin-bottom:2px}
+.card-sub{font-size:12px;color:var(--teks2);margin-bottom:14px}
+
+/* STEP INDICATOR */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:20px}
+.step{display:flex;align-items:center;gap:6px;flex:1}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step-num.done{background:var(--merah);color:#fff}
+.step-num.active{background:var(--emas);color:var(--merah)}
+.step-num.todo{background:#eee;color:#999}
+.step-label{font-size:11px;font-weight:500}
+.step-line{flex:1;height:2px;background:#eee;margin:0 4px}
+.step-line.done{background:var(--merah)}
+
+/* FORM */
+.fg{margin-bottom:13px}
+.fl{font-size:12px;font-weight:600;color:var(--teks2);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.fl-req{color:var(--merah);font-size:11px}
+input[type=text],input[type=number],input[type=tel],input[type=email],select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:#fff;color:var(--teks);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--merah);box-shadow:0 0 0 3px rgba(139,26,26,.1)}
+.input-hint{font-size:11px;color:var(--teks3);margin-top:4px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+
+/* STATUS card */
+.status-found{background:#FCEBEB;border:1px solid #F09595;border-radius:var(--radius);padding:14px;margin-bottom:14px;display:none}
+.status-found.show{display:block}
+.sf-label{font-size:11px;font-weight:600;color:var(--merah);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.sf-name{font-size:16px;font-weight:700;color:var(--merah)}
+.sf-meta{font-size:12px;color:#a33}
+
+/* BUTTONS */
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#8B1A1A,#6e1515);color:var(--emas);border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s;margin-top:8px}
+.btn-primary:active{transform:scale(.98)}
+.btn-secondary{width:100%;padding:12px;background:transparent;color:var(--teks2);border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;cursor:pointer;font-family:inherit;margin-top:8px}
+.btn-outline-merah{width:100%;padding:12px;background:transparent;color:var(--merah);border:1.5px solid var(--merah);border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px}
+
+/* KARTU */
+.kartu-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0}
+canvas.kartu-canvas{border-radius:14px;width:100%;max-width:360px;display:block;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+
+/* SUCCESS */
+.success-box{text-align:center;padding:24px 16px}
+.success-icon{font-size:48px;margin-bottom:12px}
+.success-title{font-size:20px;font-weight:700;color:var(--teks);margin-bottom:6px}
+.success-sub{font-size:14px;color:var(--teks2);line-height:1.6;margin-bottom:20px}
+
+/* INFO BOX */
+.info-box{background:var(--emas-bg);border:1px solid #d4b84a;border-radius:var(--radius-sm);padding:12px;margin-bottom:14px}
+.info-box p{font-size:12px;color:#5a4000;line-height:1.6}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:500;z-index:100;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:flex;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.bnav-item{flex:1;padding:10px 0;text-align:center;font-size:11px;color:var(--teks3);cursor:pointer;transition:.15s}
+.bnav-item.active{color:var(--merah);font-weight:600}
+.bnav-icon{font-size:20px;display:block;margin-bottom:2px}
+
+/* MOVER */
+.mover-status-box{border-radius:var(--radius);padding:14px;margin-bottom:14px;display:none}
+.mover-status-box.show{display:block}
+.mover-status-box.pending{background:#FFF8E1;border:1px solid #d4b84a}
+.mover-status-box.proses{background:#E6F1FB;border:1px solid #9cc3ea}
+.mover-status-box.selesai{background:#FCEBEB;border:1px solid #F09595}
+.mover-status-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.mover-status-desc{font-size:12px;line-height:1.6}
+.mover-step-list{display:flex;flex-direction:column;gap:0;margin-top:10px}
+.mover-step{display:flex;gap:10px;align-items:flex-start;padding:8px 0}
+.mover-step-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.mover-step-dot.done{background:var(--merah);color:#fff}
+.mover-step-dot.active{background:var(--emas);color:var(--merah)}
+.mover-step-dot.todo{background:#eee;color:#aaa}
+.mover-step-text{font-size:12px;color:var(--teks);line-height:1.5}
+.mover-step-text b{display:block;font-size:13px;margin-bottom:1px}
+
+/* RIWAYAT */
+.riwayat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.rw-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.rw-nama{font-size:15px;font-weight:700;color:var(--teks)}
+.rw-no{font-size:11px;color:var(--teks3);margin-top:2px}
+.rw-badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:99px}
+.rw-aktif{background:var(--merah-muda);color:var(--merah)}
+.rw-pending{background:#FFF8E1;color:#9a6800}
+.rw-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid #f5f5f5}
+.rw-info-item{}
+.rw-info-label{font-size:10px;color:var(--teks3);text-transform:uppercase;letter-spacing:.4px}
+.rw-info-val{font-size:12px;color:var(--teks);font-weight:500;margin-top:1px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="tb-logo">GK</div>
+    <div>
+      <div class="tb-title">GK Census</div>
+      <div class="tb-sub">Portal Anggota · Garuda Keadilan Bengkulu</div>
+    </div>
+  </div>
+
+  <!-- SCREEN: BERANDA -->
+  <div class="screen active" id="sc-beranda">
+    <div class="hero">
+      <div class="hero-tag">✦ Pendaftaran Kader</div>
+      <div class="hero-title">Kenali Garudamu 🦅</div>
+      <div class="hero-sub">Daftarkan dirimu sebagai kader resmi Garuda Keadilan Bengkulu. Isi data dengan jujur dan lengkap.</div>
+    </div>
+
+    <div class="info-box">
+      <p>ℹ️ <strong>Petunjuk:</strong> Isi formulir pendaftaran satu kali. Setelah diverifikasi oleh Bidang Kaderisasi, kamu akan mendapat <strong>nomor anggota</strong> untuk cek status dan lapor mutasi.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Sudah pernah daftar?</div>
+      <div class="card-sub">Cek status keanggotaanmu</div>
+      <div class="fg">
+        <label class="fl">Masukkan No. Anggota kamu</label>
+        <input type="text" id="cek-no" placeholder="GK-2024-001…" autocomplete="off">
+      </div>
+      <div class="status-found" id="status-found">
+        <div class="sf-label">Ditemukan</div>
+        <div class="sf-name" id="sf-name">—</div>
+        <div class="sf-meta" id="sf-meta">—</div>
+      </div>
+      <button class="btn-outline-merah" onclick="cekAnggota()">🔍 Cek Status</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Daftar sebagai kader baru</div>
+      <div class="card-sub">Belum terdaftar? Isi formulir di bawah ini</div>
+      <button class="btn-primary" onclick="sw('daftar')">📝 Isi Formulir Pendaftaran</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: FORM DAFTAR -->
+  <div class="screen" id="sc-daftar">
+    <div class="steps" id="step-indicator">
+      <div class="step">
+        <div class="step-num active" id="sn1">1</div>
+        <span class="step-label" style="font-size:10px;color:#666">Data Diri</span>
+      </div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step">
+        <div class="step-num todo" id="sn2">2</div>
+        <span class="step-label" style="font-size:10px;color:#999">Pendidikan</span>
+      </div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step">
+        <div class="step-num todo" id="sn3">3</div>
+        <span class="step-label" style="font-size:10px;color:#999">Kontak & Minat</span>
+      </div>
+    </div>
+
+    <!-- STEP 1: DATA DIRI -->
+    <div id="step1">
+      <div class="card">
+        <div class="card-title">📋 Data Diri</div>
+        <div class="card-sub">Isi sesuai identitas resmi kamu</div>
+        <div class="fg">
+          <label class="fl">Nama Lengkap <span class="fl-req">* wajib</span></label>
+          <input type="text" id="f-nama" placeholder="Nama sesuai KTP/KTM…">
+        </div>
+        <div class="fr">
+          <div class="fg">
+            <label class="fl">Tempat Lahir</label>
+            <input type="text" id="f-ttl-tempat" placeholder="Bengkulu…">
+          </div>
+          <div class="fg">
+            <label class="fl">Tanggal Lahir</label>
+            <div class="gkdate" id="gd-f-ttl-tgl"></div><input type="hidden" id="f-ttl-tgl">
+          </div>
+        </div>
+        <div class="fr">
+          <div class="fg">
+            <label class="fl">Usia</label>
+            <input type="number" id="f-usia" placeholder="18" min="10" max="99">
+          </div>
+          <div class="fg">
+            <label class="fl">Jenis Kelamin</label>
+            <select id="f-jk">
+              <option value="">Pilih</option>
+              <option>Laki-laki</option>
+              <option>Perempuan</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Nama Orang Tua / Wali</label>
+          <input type="text" id="f-ortu" placeholder="Nama ayah / ibu / wali…">
+        </div>
+        <div class="fg">
+          <label class="fl">Domisili Sekarang <span class="fl-req">* wajib</span></label>
+          <input type="text" id="f-domisili" placeholder="Kota/Kabupaten domisili saat ini…">
+        </div>
+        <div class="fg">
+          <label class="fl">Wilayah / Kelurahan GK</label>
+          <input type="text" id="f-wilayah" placeholder="Kel. Lingkar Barat, Kec. Gading Cempaka…">
+        </div>
+        <div class="fg">
+          <label class="fl">Alamat Lengkap</label>
+          <textarea id="f-alamat" placeholder="Jl. … No. … RT/RW …"></textarea>
+        </div>
+        
+      </div>
+      <button class="btn-primary" onclick="nextStep(2)">Lanjut →</button>
+      <button class="btn-secondary" onclick="sw('beranda')">Kembali</button>
+    </div>
+
+    <!-- STEP 2: PENDIDIKAN -->
+    <div id="step2" style="display:none">
+      <div class="card">
+        <div class="card-title">🎓 Latar Belakang Pendidikan</div>
+        <div class="card-sub">Data ini membantu kami memetakan kader</div>
+        <div class="fg">
+          <label class="fl">Jenjang Pendidikan</label>
+          <select id="f-jenjang">
+            <option value="">Pilih jenjang</option>
+            <option>SMP / sederajat</option>
+            <option>SMA / sederajat</option>
+            <option>Mahasiswa S1</option>
+            <option>Mahasiswa S2</option>
+            <option>Sarjana / alumni</option>
+            <option>Umum / non-pelajar</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Nama Sekolah / Universitas</label>
+          <input type="text" id="f-instansi" placeholder="Universitas Bengkulu, SMAN 1 Bengkulu…">
+        </div>
+        <div class="fg">
+          <label class="fl">Jurusan / Prodi / Kelas</label>
+          <input type="text" id="f-prodi" placeholder="Hukum, Akuntansi, IPA 2…">
+        </div>
+        <div class="fg">
+          <label class="fl">Tahun Masuk</label>
+          <input type="text" id="f-angkatan" placeholder="2022">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="nextStep(3)">Lanjut →</button>
+      <button class="btn-secondary" onclick="nextStep(1)">← Kembali</button>
+    </div>
+
+    <!-- STEP 3: KONTAK & MINAT -->
+    <div id="step3" style="display:none">
+      <div class="card">
+        <div class="card-title">📱 Kontak & Minat</div>
+        <div class="card-sub">Untuk komunikasi dan penempatan program</div>
+        <div class="fg">
+          <label class="fl">No. HP / WhatsApp <span class="fl-req">* wajib</span></label>
+          <input type="tel" id="f-hp" placeholder="0812xxxxxxxx">
+        </div>
+        <div class="fg">
+          <label class="fl">Email</label>
+          <input type="email" id="f-email" placeholder="email@gmail.com">
+        </div>
+        <div class="fg">
+          <label class="fl">Minat & Bakat <span style="font-weight:400;font-size:11px">(pisah koma)</span></label>
+          <input type="text" id="f-minat" placeholder="Desain, Dakwah, Futsal, Public Speaking…">
+        </div>
+        <div class="fg">
+          <label class="fl">Pengalaman Organisasi</label>
+          <textarea id="f-org" placeholder="OSIS, BEM, Rohis, dll… (singkat saja)"></textarea>
+        </div>
+        
+        <div class="fg">
+          <label class="fl">Motivasi bergabung GK</label>
+          <textarea id="f-motivasi" placeholder="Tuliskan motivasimu bergabung di Garuda Keadilan…"></textarea>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <p>📌 Dengan menekan <strong>Kirim Pendaftaran</strong>, data kamu akan dikirim ke Bidang Kaderisasi untuk diverifikasi. No. anggota akan ditetapkan oleh admin.</p>
+      </div>
+
+      <button class="btn-primary" onclick="kirimDaftar()">🚀 Kirim Pendaftaran</button>
+      <button class="btn-secondary" onclick="nextStep(2)">← Kembali</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: RIWAYAT / STATUS -->
+  <div class="screen" id="sc-riwayat">
+    <div class="card-title" style="margin-bottom:12px">📂 Status Pendaftaran</div>
+    <div id="riwayat-list">
+      <div style="text-align:center;padding:40px 16px;color:var(--teks3)">
+        <div style="font-size:36px;margin-bottom:10px;opacity:.3">📂</div>
+        Belum ada pendaftaran dari perangkat ini.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: GK MOVER -->
+  <div class="screen" id="sc-mover">
+    <div class="hero" style="background:linear-gradient(135deg,#8B1A1A,#6e1515)">
+      <div class="hero-tag">✦ P04 · Program Mutasi Kader</div>
+      <div class="hero-title">GK Mover 🧭</div>
+      <div class="hero-sub">Pindah kota atau kampus? Lapor di sini supaya kamu tetap terhubung dengan Garuda Keadilan di lokasi baru — lewat Buddy System & grup GK Perantau.</div>
+    </div>
+
+    <div class="info-box">
+      <p>📌 <strong>Alur GK Mover:</strong> Lapor mutasi → Data diserahkan ke DPD/wilayah tujuan → Kamu dipasangkan dengan mentor lokal (Buddy) → Bergabung ke grup <strong>GK Perantau</strong>.</p>
+    </div>
+
+    <!-- STATUS BOX -->
+    <div class="mover-status-box" id="mover-status">
+      <div class="mover-status-title" id="mover-status-title">—</div>
+      <div class="mover-status-desc" id="mover-status-desc">—</div>
+      <div class="mover-step-list" id="mover-step-list"></div>
+    </div>
+
+    <!-- FORM LAPOR MUTASI -->
+    <div class="card" id="mover-form-card">
+      <div class="card-title">🧭 Lapor Mutasi / Perpindahan</div>
+      <div class="card-sub">Masukkan no. anggota untuk mulai lapor mutasi</div>
+      <div class="fg">
+        <label class="fl">No. Anggota <span class="fl-req">* wajib</span></label>
+        <input type="text" id="mv-no" placeholder="GK-2024-001…">
+      </div>
+      <div class="fg">
+        <label class="fl">Alasan Mutasi</label>
+        <select id="mv-alasan">
+          <option value="">Pilih alasan</option>
+          <option>Studi / lanjut kuliah</option>
+          <option>Pekerjaan</option>
+          <option>Pindah domisili keluarga</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="fl">Wilayah / Kota Tujuan <span class="fl-req">* wajib</span></label>
+        <input type="text" id="mv-tujuan" placeholder="Kota/Kabupaten + Provinsi tujuan…">
+      </div>
+      <div class="fg">
+        <label class="fl">Kampus / Instansi Tujuan</label>
+        <input type="text" id="mv-instansi" placeholder="Nama kampus / kantor tujuan (jika ada)…">
+      </div>
+      <div class="fg">
+        <label class="fl">Perkiraan Tanggal Pindah</label>
+        <div class="gkdate" id="gd-mv-tanggal"></div><input type="hidden" id="mv-tanggal">
+      </div>
+      <div class="fg">
+        <label class="fl">Keinginan di Tempat Baru</label>
+        <select id="mv-keinginan">
+          <option value="">Pilih keinginanmu</option>
+          <option>Bergabung ke kelompok UPA</option>
+          <option>Lanjut aktif di GK sesuai domisili baru</option>
+          <option>Belum tahu / ikut arahan admin</option>
+          <option>Lainnya (tulis di keterangan)</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="fl">Keterangan Tambahan <span style="font-weight:400;font-size:11px">(opsional)</span></label>
+        <textarea id="mv-catatan" placeholder="Misal: nama kelompok/komunitas yang dituju, kontak yang sudah dikenal…"></textarea>
+      </div>
+      <button class="btn-primary" onclick="laporMutasi()">🚀 Kirim Laporan Mutasi</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <div class="bnav-item active" data-sc="beranda" onclick="sw('beranda')">
+      <span class="bnav-icon">🏠</span>Beranda
+    </div>
+    <div class="bnav-item" data-sc="daftar" onclick="sw('daftar')">
+      <span class="bnav-icon">📝</span>Daftar
+    </div>
+    <div class="bnav-item" data-sc="mover" onclick="sw('mover')">
+      <span class="bnav-icon">🧭</span>Mover
+    </div>
+    <div class="bnav-item" data-sc="riwayat" onclick="sw('riwayat')">
+      <span class="bnav-icon">📂</span>Status
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== GK SYNC: konfigurasi ===== */
+const GK_API='https://script.google.com/macros/s/AKfycbzKC2oCaFJ-SU9j-S03_I60ma8M2E_Vi0akGjpyOLwURr6YF6wwuDX-EZAWvl1q5rH-/exec'; // ← ganti dengan URL /exec (lihat PANDUAN)
+const GK_ON=()=>/^https:\/\//.test(GK_API);
+async function gkApi(p){
+  let r,j;
+  try{ r=await fetch(GK_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(p)}); j=await r.json(); }
+  catch(e){ e.net=true; throw e; }
+  if(!j.ok){ const e=new Error(j.err||'Gagal'); e.server=true; throw e; }
+  return j;
+}
+/* ===== Pilih tanggal: 3 dropdown (tanggal, bulan, tahun) ===== */
+const GK_BLN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function fmtTgl(s){ const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(s||''); return m?(+m[3])+' '+GK_BLN[+m[2]-1]+' '+m[1]:(s||''); }
+function gkDate(id,mode){
+  const h=document.getElementById(id), box=document.getElementById('gd-'+id); if(!h||!box) return;
+  const Y=new Date().getFullYear(), ys=[]; 
+  if(mode==='lahir'){ for(let y=Y-8;y>=1960;y--) ys.push(y); } else { for(let y=Y;y<=Y+6;y++) ys.push(y); }
+  const mk=(ph,opts)=>{ const s=document.createElement('select'); s.innerHTML='<option value="">'+ph+'</option>'+opts.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join(''); box.appendChild(s); return s; };
+  const d=mk('Tgl',Array.from({length:31},(_,i)=>[i+1,i+1])), m=mk('Bulan',GK_BLN.map((b,i)=>[i+1,b])), y=mk('Tahun',ys.map(v=>[v,v]));
+  const desc=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');
+  const p2=n=>String(n).padStart(2,'0');
+  function sync(){
+    const dim=(y.value&&m.value)?new Date(+y.value,+m.value,0).getDate():31;
+    Array.from(d.options).forEach(o=>{ if(o.value) o.hidden=+o.value>dim; });
+    if(+d.value>dim) d.value=dim;
+    desc.set.call(h,(d.value&&m.value&&y.value)?y.value+'-'+p2(m.value)+'-'+p2(d.value):'');
+  }
+  [d,m,y].forEach(s=>s.addEventListener('change',sync));
+  Object.defineProperty(h,'value',{ get(){return desc.get.call(h);}, set(v){
+    desc.set.call(h,v||''); const t=/^(\d{4})-(\d\d)-(\d\d)$/.exec(v||'');
+    if(t){ y.value=+t[1]; m.value=+t[2]; d.value=+t[3]; } else { d.value=m.value=y.value=''; } } });
+}
+(function(){ const st=document.createElement('style'); st.textContent='.gkdate{display:grid;grid-template-columns:.9fr 1.4fr 1.1fr;gap:8px}'; document.head.appendChild(st); })();
+const STORE = 'gk-census-v2';
+const MINE  = 'gk-mine-v2';
+
+function getData(){ try{ return JSON.parse(localStorage.getItem(STORE)||'[]'); }catch(e){ return []; } }
+function getMine(){ try{ return JSON.parse(localStorage.getItem(MINE)||'[]'); }catch(e){ return []; } }
+
+
+function sw(sc){
+  document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',el.id==='sc-'+sc));
+  document.querySelectorAll('.bnav-item').forEach(el=>el.classList.toggle('active',el.dataset.sc===sc));
+  if(sc==='riwayat') renderRiwayat();
+  if(sc==='mover') renderMoverStatus();
+}
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+// ===== CEK ANGGOTA =====
+function cekAnggota(){
+  const no = document.getElementById('cek-no').value.trim().toUpperCase();
+  if(!no){ toast('⚠️ Masukkan nomor anggota dulu!'); return; }
+  const list = getData();
+  const k = list.find(x => (x.noanggota||'').toUpperCase() === no);
+  const sf = document.getElementById('status-found');
+  if(!k){
+    sf.style.display='block';
+    document.getElementById('sf-name').textContent = 'Tidak ditemukan';
+    document.getElementById('sf-meta').textContent = 'Pastikan no. anggota benar, atau hubungi admin.';
+    sf.style.background='#fff3cd'; sf.style.borderColor='#ffc107';
+    document.getElementById('sf-name').style.color='#856404';
+  }
+  sf.style.display='block'; sf.style.background='#FCEBEB'; sf.style.borderColor='#F09595';
+  document.getElementById('sf-name').textContent = k.nama;
+  document.getElementById('sf-name').style.color = '#8B1A1A';
+  document.getElementById('sf-meta').textContent = `${k.noanggota} · ${k.verified==='ya'?'✅ Terverifikasi':'⏳ Menunggu verifikasi'}`;
+  if(k.verified!=='ya') toast('⏳ Kader belum diverifikasi admin.');
+}
+
+// ===== STEP FORM =====
+let step = 1;
+function nextStep(n){
+  if(n===2){
+    const nama = document.getElementById('f-nama').value.trim();
+    if(!nama){ toast('⚠️ Nama wajib diisi!'); return; }
+  }
+  if(n===3){
+    const hp = document.getElementById('f-hp').value.trim();
+  }
+  step = n;
+  [1,2,3].forEach(i=>{
+    document.getElementById('step'+i).style.display = i===n?'block':'none';
+    const sn = document.getElementById('sn'+i);
+    sn.className = 'step-num ' + (i<n?'done':i===n?'active':'todo');
+    if(i<3){ const sl=document.getElementById('sl'+i); sl.className='step-line '+(i<n?'done':''); }
+  });
+  window.scrollTo(0,0);
+}
+
+// ===== KIRIM DAFTAR =====
+function kirimDaftar(){
+  const nama = document.getElementById('f-nama').value.trim();
+  const hp   = document.getElementById('f-hp').value.trim();
+  if(!nama||!hp){ toast('⚠️ Nama dan No. HP wajib diisi!'); return; }
+
+  const list = getData();
+  const now  = Date.now();
+  const mine = getMine();
+
+  const k = {
+    id: now,
+    nama,
+    noanggota: '',
+    ttlTempat: document.getElementById('f-ttl-tempat').value.trim(),
+    ttlTgl: document.getElementById('f-ttl-tgl').value,
+    usia: document.getElementById('f-usia').value.trim(),
+    jk: document.getElementById('f-jk').value,
+    ortu: document.getElementById('f-ortu').value.trim(),
+    domisili: document.getElementById('f-domisili').value.trim(),
+    wilayah: document.getElementById('f-wilayah').value.trim(),
+    alamat: document.getElementById('f-alamat').value.trim(),
+    periode: '2025–2030',
+    jenjang: document.getElementById('f-jenjang').value,
+    instansi: document.getElementById('f-instansi').value.trim(),
+    prodi: document.getElementById('f-prodi').value.trim(),
+    angkatan: document.getElementById('f-angkatan').value.trim(),
+    hp,
+    email: document.getElementById('f-email').value.trim(),
+    minat: document.getElementById('f-minat').value.trim(),
+    org: document.getElementById('f-org').value.trim(),
+    motivasi: document.getElementById('f-motivasi').value.trim(),
+    status: 'aktif',
+    verified: 'tidak',
+    catatan: '',
+    submitAt: now,
+    pendingApproval: true,
+  };
+
+  list.unshift(k);
+  localStorage.setItem(STORE, JSON.stringify(list));
+  gkSend({a:'submit',rec:k});
+  mine.unshift(k.id);
+  localStorage.setItem(MINE, JSON.stringify(mine));
+
+  // reset form
+  ['f-nama','f-ttl-tempat','f-ttl-tgl','f-usia','f-ortu','f-domisili','f-wilayah','f-alamat','f-instansi','f-prodi','f-angkatan','f-hp','f-email','f-minat','f-org','f-motivasi'].forEach(id=>document.getElementById(id).value='');
+  ['f-jk','f-jenjang'].forEach(id=>document.getElementById(id).value='');
+  nextStep(1);
+
+  sw('riwayat');
+  toast('✅ Pendaftaran berhasil dikirim!');
+}
+
+// ===== RIWAYAT =====
+function renderRiwayat(){
+  const mine = getMine();
+  const list = getData();
+  const el   = document.getElementById('riwayat-list');
+  const myKaders = list.filter(k=>mine.includes(k.id));
+  if(!myKaders.length){
+    el.innerHTML=`<div style="text-align:center;padding:40px 16px;color:var(--teks3)"><div style="font-size:36px;margin-bottom:10px;opacity:.3">📂</div>Belum ada pendaftaran dari perangkat ini.</div>`;
+    return;
+  }
+  el.innerHTML = myKaders.map(k=>`
+    <div class="riwayat-card">
+      <div class="rw-header">
+        <div>
+          <div class="rw-nama">${esc(k.nama)}</div>
+          <div class="rw-no">${k.noanggota?k.noanggota:'Belum ada no. anggota'}</div>
+        </div>
+        <span class="rw-badge ${k.verified==='ya'?'rw-aktif':'rw-pending'}">${k.verified==='ya'?'✅ Terverifikasi':'⏳ Pending'}</span>
+      </div>
+      <div class="rw-info">
+        <div class="rw-info-item"><div class="rw-info-label">Wilayah</div><div class="rw-info-val">${esc(k.wilayah||'—')}</div></div>
+        <div class="rw-info-item"><div class="rw-info-label">Periode</div><div class="rw-info-val">2025–2030</div></div>
+        <div class="rw-info-item"><div class="rw-info-label">HP</div><div class="rw-info-val">${esc(k.hp||'—')}</div></div>
+        <div class="rw-info-item"><div class="rw-info-label">Jenjang</div><div class="rw-info-val">${esc(k.jenjang||'—')}</div></div>
+      </div>
+      ${k.verified==='ya'?'':`<div style="margin-top:10px;font-size:12px;color:#9a6800;background:#FFF8E1;border-radius:8px;padding:8px">⏳ Menunggu verifikasi admin. Sabar ya!</div>`}
+    </div>`).join('');
+}
+
+
+// ===== GK MOVER =====
+function laporMutasi(){
+  const no = document.getElementById('mv-no').value.trim().toUpperCase();
+  const tujuan = document.getElementById('mv-tujuan').value.trim();
+  if(!no){ toast('⚠️ Masukkan no. anggota!'); return; }
+  if(!tujuan){ toast('⚠️ Wilayah/kota tujuan wajib diisi!'); return; }
+
+  const list = getData();
+  const idx = list.findIndex(x=>(x.noanggota||'').toUpperCase()===no);
+  if(idx<0){ toast('❌ No. anggota tidak ditemukan.'); return; }
+  const k = list[idx];
+  if(k.verified!=='ya'){ toast('⚠️ Kader belum terverifikasi, tidak bisa lapor mutasi.'); return; }
+
+  k.mover = {
+    status: 'lapor',                 // lapor -> proses -> selesai
+    alasan: document.getElementById('mv-alasan').value,
+    tujuan,
+    instansiTujuan: document.getElementById('mv-instansi').value.trim(),
+    tanggal: document.getElementById('mv-tanggal').value.trim(),
+    keinginan:document.getElementById('mv-keinginan').value,
+    catatan: document.getElementById('mv-catatan').value.trim(),
+    buddy: '',
+    submitAt: Date.now()
+  };
+
+  list[idx] = k;
+  localStorage.setItem(STORE, JSON.stringify(list));
+  gkSend({a:'mover',no,mover:k.mover});
+
+  ['mv-tujuan','mv-instansi','mv-tanggal','mv-catatan'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('mv-keinginan').value='';
+  document.getElementById('mv-alasan').value='';
+
+  toast('✅ Laporan mutasi terkirim! Cek status di bawah.');
+  renderMoverStatus(no);
+}
+
+function renderMoverStatus(prefillNo){
+  const list = getData();
+  let no = (prefillNo || document.getElementById('mv-no').value || '').trim().toUpperCase();
+  if(!no && getMine().length){
+    // coba ambil dari kader pertama milik device ini yang punya status mover
+    const mineIds = getMine();
+    const found = list.find(k=>mineIds.includes(k.id) && k.mover);
+    if(found) no = (found.noanggota||'').toUpperCase();
+  }
+  const box = document.getElementById('mover-status');
+  if(!no){ box.classList.remove('show'); return; }
+
+  const k = list.find(x=>(x.noanggota||'').toUpperCase()===no);
+  if(!k || !k.mover){ box.classList.remove('show'); return; }
+
+  document.getElementById('mv-no').value = k.noanggota;
+
+  const m = k.mover;
+  const stMap = {
+    lapor:   {cls:'pending', title:'⏳ Laporan diterima', desc:'Laporan mutasi kamu sudah diterima dan menunggu diteruskan ke DPD/wilayah tujuan oleh admin kaderisasi.'},
+    proses:  {cls:'proses',  title:'🔄 Sedang diproses', desc:'Data kamu sedang diserahkan ke wilayah tujuan. Buddy (mentor lokal) sedang dicarikan untukmu.'},
+    selesai: {cls:'selesai', title:'✅ Mutasi selesai & aktif', desc:'Kamu sudah aktif di wilayah baru' + (m.buddy?(' dengan Buddy: '+esc(m.buddy)):'') + '. Selamat bergabung dengan GK Perantau!'}
+  };
+  const info = stMap[m.status] || stMap.lapor;
+  box.className = 'mover-status-box show ' + info.cls;
+  document.getElementById('mover-status-title').textContent = info.title;
+  document.getElementById('mover-status-desc').innerHTML = info.desc + `<br><span style="opacity:.7">Tujuan: ${esc(m.tujuan)}${m.instansiTujuan?' · '+esc(m.instansiTujuan):''}</span>`;
+
+  const steps = [
+    {key:'lapor',   label:'Lapor Mutasi', desc:'Laporan dikirim ke admin'},
+    {key:'proses',  label:'Serah Terima Data', desc:'Data diserahkan ke DPD tujuan + cari Buddy'},
+    {key:'selesai', label:'Aktif di Lokasi Baru', desc:'Tergabung di GK Perantau'}
+  ];
+  const order = ['lapor','proses','selesai'];
+  const curIdx = order.indexOf(m.status);
+  document.getElementById('mover-step-list').innerHTML = steps.map((s,i)=>{
+    const cls = i<curIdx ? 'done' : i===curIdx ? 'active' : 'todo';
+    const icon = i<curIdx ? '✓' : (i+1);
+    return `<div class="mover-step">
+      <div class="mover-step-dot ${cls}">${icon}</div>
+      <div class="mover-step-text"><b>${s.label}</b>${s.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+
+
+
+
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+/* ===== GK SYNC portal: kirim ke server + tarik status terbaru ===== */
+const GKP={table:'anggota',store:'gk-census-v2',mine:'gk-mine-v2'};
+const GK_OUT='gk-outbox-'+GKP.table;
+const gkRead=k=>{ try{return JSON.parse(localStorage.getItem(k)||'[]');}catch(e){return[];} };
+function gkSend(job){ const q=gkRead(GK_OUT); q.push(job); localStorage.setItem(GK_OUT,JSON.stringify(q)); gkSync(); }
+let gkBusy=false;
+async function gkSync(){
+  if(gkBusy||!GK_ON()) return; gkBusy=true;
+  try{
+    let q=gkRead(GK_OUT);
+    while(q.length){
+      try{ await gkApi(Object.assign({t:GKP.table},q[0])); }
+      catch(e){ if(!e.server) throw e; toast('⚠️ '+e.message); }   // galat server: buang; galat jaringan: coba lagi nanti
+      q.shift(); localStorage.setItem(GK_OUT,JSON.stringify(q));
+    }
+    const pub=(await gkApi({a:'pub',t:GKP.table})).data;
+    const mine=new Set(gkRead(GKP.mine)), loc=gkRead(GKP.store), byId={};
+    loc.forEach(x=>byId[x.id]=x);
+    const ids=new Set(pub.map(p=>p.id));
+    const out=pub.map(p=>mine.has(p.id)&&byId[p.id]?Object.assign({},byId[p.id],p):p);
+    q.forEach(j=>{ if(j.a==='submit'&&!ids.has(j.rec.id)) out.push(j.rec); });
+    localStorage.setItem(GKP.store,JSON.stringify(out));
+    gkRefresh();
+  }catch(e){}
+  gkBusy=false;
+}
+function gkRefresh(){
+  if(typeof init==='function') init();
+  const a=document.querySelector('.screen.active');
+  if(a&&a.id==='sc-riwayat') renderRiwayat();
+  if(a&&a.id==='sc-mover') renderMoverStatus();
+}
+if(GK_ON()){
+  gkSync();
+  setInterval(()=>{ if(document.visibilityState==='visible') gkSync(); },60000);
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') gkSync(); });
+}
+
+gkDate('f-ttl-tgl','lahir'); gkDate('mv-tanggal','depan');
+</script>
+</body>
+</html>

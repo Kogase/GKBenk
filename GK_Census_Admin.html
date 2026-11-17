@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#8B1A1A">
+<title>GK Census — Admin Kaderisasi</title>
+<style>
+:root{--merah:#8B1A1A;--merah-tua:#6e1515;--merah-muda:#FCEBEB;--emas:#e8c84b;--emas-bg:#FAEEDA;--putih:#fff;--abu:#f5f5f5;--border:#e0e0e0;--teks:#1a1a1a;--teks2:#666;--teks3:#999;--radius:12px;--radius-sm:8px;--shadow:0 2px 12px rgba(0,0,0,.08)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0ede8}
+body{overflow-x:hidden}
+.app{max-width:480px;margin:0 auto;min-height:100vh;background:#f5f2ee;position:relative}
+
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#8B1A1A 0%,#5c1010 100%)}
+.login-logo{width:72px;height:72px;background:var(--emas);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;color:var(--merah);margin-bottom:16px;box-shadow:0 4px 20px rgba(232,200,75,.3)}
+.login-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;text-align:center}
+.login-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:28px;text-align:center}
+.login-card{background:#fff;border-radius:var(--radius);padding:20px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.login-card h3{font-size:16px;font-weight:700;color:var(--teks);margin-bottom:4px}
+.login-card p{font-size:12px;color:var(--teks2);margin-bottom:18px}
+.fg{margin-bottom:13px}
+.fl{font-size:12px;font-weight:600;color:var(--teks2);margin-bottom:6px;display:block}
+input[type=text],input[type=number],input[type=password],input[type=tel],input[type=email],select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:#fff;color:var(--teks);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--merah);box-shadow:0 0 0 3px rgba(139,26,26,.1)}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#8B1A1A,#6e1515);color:var(--emas);border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s;margin-top:8px}
+.btn-primary:active{transform:scale(.98)}
+.btn-secondary{width:100%;padding:11px;background:transparent;color:var(--teks2);border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;cursor:pointer;font-family:inherit;margin-top:8px}
+.btn-sm{padding:7px 14px;font-size:12px;font-weight:600;border-radius:var(--radius-sm);border:none;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-approve{background:#FCEBEB;color:var(--merah);border:1px solid #F09595}
+.btn-reject{background:#f5f5f5;color:#666;border:1px solid #ddd}
+.btn-danger-sm{background:#fde8e8;color:#c0392b;border:1px solid #f5aaaa}
+.btn-emas{background:var(--emas);color:var(--merah);border:none}
+
+/* TOPBAR */
+.topbar{background:linear-gradient(135deg,#8B1A1A,#6e1515);padding:max(14px,env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{width:38px;height:38px;background:var(--emas);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--merah);flex-shrink:0}
+.tb-title{font-size:15px;font-weight:700;color:#fff}
+.tb-sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px}
+.tb-logout{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:var(--radius-sm);padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+
+/* TABS */
+.tab-bar{display:flex;background:#6e1515;border-bottom:1px solid rgba(232,200,75,.2);flex-shrink:0}
+.tab{flex:1;padding:9px 0;text-align:center;font-size:11px;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;font-weight:400}
+.tab.active{color:var(--emas);border-bottom-color:var(--emas);font-weight:600}
+.tab-icon{font-size:17px;display:block;margin-bottom:1px}
+
+/* SCREENS */
+.screen{display:none;padding:14px 14px 100px;overflow-y:auto;height:calc(100vh - 107px)}
+.screen.active{display:block}
+.screen::-webkit-scrollbar{display:none}
+
+/* STAT */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat-card{background:#fff;border-radius:var(--radius);padding:13px 14px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.stat-num{font-size:26px;font-weight:700;color:var(--merah);line-height:1}
+.stat-label{font-size:12px;color:var(--teks2);margin-top:4px}
+.sec-title{font-size:11px;font-weight:600;color:var(--teks3);letter-spacing:.7px;text-transform:uppercase;margin:0 0 10px}
+
+/* KADER CARD */
+.kc{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.kc-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+.av0{background:#FCEBEB;color:#791F1F}
+.av1{background:#FAEEDA;color:#633806}
+.av2{background:#F7C1C1;color:#501313}
+.av3{background:#F5C4B3;color:#712B13}
+.av4{background:#FAECE7;color:#993C1D}
+.kc-info{flex:1;min-width:0}
+.kc-nama{font-size:15px;font-weight:700;color:var(--teks)}
+.kc-no{font-size:12px;color:var(--teks3);margin-top:2px}
+.kc-meta{font-size:12px;color:var(--teks2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-block;font-size:10px;padding:3px 9px;border-radius:99px;font-weight:600}
+.b-aktif{background:#FCEBEB;color:#791F1F}
+.b-nonaktif{background:#f1f1f1;color:#666}
+.b-verified{background:var(--emas-bg);color:#633806}
+.b-pending{background:#FFF8E1;color:#9a6800}
+.kc-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid #f5f5f5}
+.kc-fields{border-top:1px solid #f5f5f5;margin-top:10px;padding-top:10px;display:none}
+.kc-fields.show{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+.kf-item{}
+.kf-label{font-size:10px;color:var(--teks3);text-transform:uppercase;letter-spacing:.4px}
+.kf-val{font-size:12px;color:var(--teks);font-weight:500;margin-top:1px;word-break:break-word}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-sheet{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:20px 18px max(44px,calc(env(safe-area-inset-bottom)+20px));max-height:90vh;overflow-y:auto;animation:slideUp .25s ease-out}
+.modal-sheet::-webkit-scrollbar{display:none}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.handle{width:36px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:17px;font-weight:700;color:var(--teks);margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--teks2);margin-bottom:18px}
+
+/* KARTU */
+.k-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;align-items:center;justify-content:center;padding:20px}
+.k-overlay.open{display:flex;animation:fadeIn .2s}
+.k-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:380px}
+canvas.kcanvas{border-radius:14px;width:100%;max-width:360px;display:block;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.k-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.k-dl{background:var(--emas);border:none;color:var(--merah);border-radius:var(--radius-sm);padding:12px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:700}
+.k-close{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:var(--radius-sm);padding:12px;cursor:pointer;font-size:13px;font-family:inherit}
+
+/* SEARCH */
+.srch{position:relative;margin-bottom:12px}
+.srch-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--teks3);font-size:17px;pointer-events:none}
+.srch input{padding-left:36px}
+.filter-sw{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.filter-sw::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:6px 14px;border-radius:99px;font-size:12px;border:1px solid var(--border);cursor:pointer;background:#fff;color:var(--teks2);font-family:inherit;font-weight:500}
+.chip.on{background:var(--merah-muda);color:var(--merah);border-color:#F09595;font-weight:600}
+
+/* STAT BARS */
+.bar-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.bar-item-label{display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px}
+.bar-track{height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+.bar-fill{height:7px;border-radius:4px}
+.bar-merah{background:linear-gradient(90deg,#8B1A1A,#c0392b)}
+.bar-emas{background:linear-gradient(90deg,#c8a84b,#e8c84b)}
+
+/* TAMBAH MANUAL */
+.info-box{background:var(--emas-bg);border:1px solid #d4b84a;border-radius:var(--radius-sm);padding:12px;margin-bottom:14px}
+.info-box p{font-size:12px;color:#5a4000;line-height:1.6}
+
+/* KARTU DESAIN UPLOAD */
+.desain-preview{width:100%;border-radius:var(--radius);border:2px dashed var(--border);min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;background:#fafafa;transition:.2s}
+.desain-preview:hover{border-color:var(--merah);background:var(--merah-muda)}
+.desain-preview img{width:100%;height:auto;border-radius:var(--radius);display:block}
+.desain-preview .dp-label{font-size:13px;color:var(--teks3);text-align:center;padding:20px}
+.desain-preview .dp-overlay{position:absolute;inset:0;background:rgba(139,26,26,.6);display:none;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;border-radius:var(--radius)}
+.desain-preview:hover .dp-overlay{display:flex}
+.desain-info{font-size:12px;color:var(--teks3);margin-top:6px;text-align:center}
+.desain-active{border:2px solid var(--merah);background:var(--merah-muda)}
+
+/* KARTU DESAIN UPLOAD */
+.desain-preview{width:100%;border-radius:var(--radius);border:2px dashed var(--border);min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;background:#fafafa;transition:.2s}
+.desain-preview:hover{border-color:var(--merah);background:var(--merah-muda)}
+.desain-preview img{width:100%;height:auto;border-radius:var(--radius);display:block}
+.desain-preview .dp-label{font-size:13px;color:var(--teks3);text-align:center;padding:20px}
+.desain-preview .dp-overlay{position:absolute;inset:0;background:rgba(139,26,26,.6);display:none;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;border-radius:var(--radius)}
+.desain-preview:hover .dp-overlay{display:flex}
+.desain-info{font-size:12px;color:var(--teks3);margin-top:6px;text-align:center}
+.desain-active{border:2px solid var(--merah);background:var(--merah-muda)}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:500;z-index:100;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+/* NOTIF DOT */
+.notif-dot{display:inline-block;width:8px;height:8px;background:#e8c84b;border-radius:50%;margin-left:4px;vertical-align:middle}
+
+/* PENGURUS */
+.pgr-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.pgr-posisi{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;display:inline-block;margin-top:4px}
+.pos-ket{background:#FCEBEB;color:#791F1F}
+.pos-sek{background:#E6F1FB;color:#0C447C}
+.pos-ben{background:#EAF3DE;color:#3B6D11}
+.pos-ketbid{background:#F3E5FF;color:#4B0082}
+.pos-sekbid{background:#f5f5f5;color:#555}
+.pos-angg{background:#fafafa;color:#444}
+
+/* MOVER */
+.mover-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.mover-stage{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;letter-spacing:.4px;text-transform:uppercase}
+.mover-lapor{background:#FFF8E1;color:#9a6800}
+.mover-proses{background:#E6F1FB;color:#185FA5}
+.mover-selesai{background:#FCEBEB;color:#791F1F}
+.mover-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.mover-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;border-top:1px solid #f5f5f5;padding-top:8px;margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen" class="login-screen">
+  <div class="login-logo">GK</div>
+  <div class="login-title">Admin Kaderisasi</div>
+  <div class="login-sub">GK Census · Garuda Keadilan Bengkulu</div>
+  <div class="login-card">
+    <h3>🔐 Login Admin</h3>
+    <p>Khusus Ketua / Anggota Bidang Kaderisasi</p>
+    <div class="fg">
+      <label class="fl">Username</label>
+      <input type="text" id="login-user" placeholder="kaderisasi" autocomplete="off">
+    </div>
+    <div class="fg">
+      <label class="fl">Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="login-err" style="display:none;font-size:12px;color:#c0392b;margin-top:4px;padding:8px;background:#fde8e8;border-radius:8px">❌ Username atau password salah.</div>
+    <button class="btn-primary" onclick="doLogin()">🔓 Masuk</button>
+    <div style="font-size:11px;color:var(--teks3);margin-top:12px;text-align:center">Username: <b>kaderisasi</b><br>Password awal ada di panduan — segera ganti di tab Setting</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none">
+  <div class="app">
+    <div class="topbar">
+      <div class="tb-left">
+        <div class="tb-logo">GK</div>
+        <div>
+          <div class="tb-title">Admin Kaderisasi</div>
+          <div class="tb-sub">GK Census · Garuda Keadilan Bengkulu</div>
+        </div>
+      </div>
+      <button class="tb-logout" onclick="doLogout()">Keluar</button>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active" data-tab="beranda" onclick="sw('beranda')"><span class="tab-icon">🏠</span>Beranda</div>
+      <div class="tab" data-tab="pending" onclick="sw('pending')"><span class="tab-icon">⏳</span>Pending<span class="notif-dot" id="notif-dot" style="display:none"></span></div>
+      <div class="tab" data-tab="mover" onclick="sw('mover')"><span class="tab-icon">🧭</span>Mover<span class="notif-dot" id="notif-dot-mover" style="display:none"></span></div>
+      <div class="tab" data-tab="kader" onclick="sw('kader')"><span class="tab-icon">📋</span>Kader</div>
+      <div class="tab" data-tab="stat" onclick="sw('stat')"><span class="tab-icon">📊</span>Statistik</div>
+      <div class="tab" data-tab="pengurus" onclick="sw('pengurus')"><span class="tab-icon">🏛️</span>Pengurus<span class="notif-dot" id="notif-dot-prg" style="display:none"></span></div>
+      <div class="tab" data-tab="setting" onclick="sw('setting')"><span class="tab-icon">⚙️</span>Setting</div>
+    </div>
+
+    <!-- BERANDA -->
+    <div class="screen active" id="screen-beranda">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" id="s0">0</div><div class="stat-label">👥 Total Kader</div></div>
+        <div class="stat-card"><div class="stat-num" id="s1">0</div><div class="stat-label">✅ Terverifikasi</div></div>
+        <div class="stat-card"><div class="stat-num" id="s2" style="color:#9a6800">0</div><div class="stat-label">⏳ Menunggu</div></div>
+        <div class="stat-card"><div class="stat-num" id="s3">0</div><div class="stat-label">📍 Wilayah</div></div>
+      </div>
+
+      <div class="sec-title">⚡ Aksi Cepat</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <button class="btn-primary" style="margin:0;font-size:13px;padding:12px" onclick="sw('pending')">⏳ Cek Pending</button>
+        <button class="btn-primary" style="margin:0;font-size:13px;padding:12px;background:linear-gradient(135deg,#c8a84b,#e8c84b);color:#5a3000" onclick="openTambahManual()">➕ Tambah Manual</button>
+      </div>
+      <div style="margin-bottom:16px">
+        <button class="btn-primary" style="margin:0;font-size:13px;padding:12px;width:100%;background:linear-gradient(135deg,#185FA5,#0C447C)" onclick="sw('mover')">🧭 Buka GK Mover<span class="notif-dot" id="notif-dot-mover2" style="display:none"></span></button>
+      </div>
+
+      <div class="sec-title">🕐 Kader terbaru</div>
+      <div id="recent-list"></div>
+    </div>
+
+    <!-- PENDING -->
+    <div class="screen" id="screen-pending">
+      <div class="info-box">
+        <p>⏳ Daftar anggota yang sudah mengisi formulir melalui <strong>Portal Anggota</strong> dan menunggu verifikasi kamu. Setelah disetujui, berikan nomor anggota.</p>
+      </div>
+      <div id="pending-list">
+        <div style="text-align:center;padding:40px 16px;color:var(--teks3)"><div style="font-size:36px;margin-bottom:10px;opacity:.3">⏳</div>Tidak ada pendaftaran pending.</div>
+      </div>
+    </div>
+
+    <!-- GK MOVER -->
+    <div class="screen" id="screen-mover">
+      <div class="info-box">
+        <p>🧭 <strong>GK Mover (P04):</strong> Kader yang melaporkan mutasi via Portal Anggota muncul di sini secara otomatis. Tindak lanjuti dengan menugaskan Buddy lokal lalu update status hingga "Selesai".</p>
+      </div>
+      <div id="mover-list">
+        <div style="text-align:center;padding:40px;color:var(--teks3)"><div style="font-size:36px;margin-bottom:10px;opacity:.3">🧭</div>Belum ada laporan mutasi.</div>
+      </div>
+    </div>
+
+    <!-- KADER -->
+    <div class="screen" id="screen-kader">
+      <div class="srch">
+        <span class="srch-icon">🔍</span>
+        <input type="text" id="srch-input" placeholder="Cari nama, no. anggota, wilayah…" oninput="renderKader()">
+      </div>
+      <div class="filter-sw">
+        <button class="chip on" data-f="semua" onclick="setF('semua')">Semua</button>
+        <button class="chip" data-f="aktif" onclick="setF('aktif')">Aktif</button>
+        <button class="chip" data-f="nonaktif" onclick="setF('nonaktif')">Non-aktif</button>
+        <button class="chip" data-f="verified" onclick="setF('verified')">Terverifikasi</button>
+        <button class="chip" data-f="pending" onclick="setF('pending')">Pending</button>
+      </div>
+      <div id="kader-list"></div>
+    </div>
+
+    <!-- PENGURUS -->
+    <div class="screen" id="screen-pengurus">
+      <div class="info-box">
+        <p>🏅 Data pengurus dari <strong>Portal Pengurus</strong> masuk di sini secara otomatis. Verifikasi dan tetapkan no. anggota pengurus.</p>
+      </div>
+      <div class="srch" style="margin-bottom:10px">
+        <span class="srch-icon">🔍</span>
+        <input type="text" id="pgr-srch" placeholder="Cari nama, posisi, bidang…" oninput="renderPengurus()">
+      </div>
+      <div class="filter-sw" id="pgr-filter-sw">
+        <button class="chip on" data-pf="semua" onclick="setPgrF('semua')">Semua</button>
+        <button class="chip" data-pf="pending" onclick="setPgrF('pending')">⏳ Pending</button>
+        <button class="chip" data-pf="verified" onclick="setPgrF('verified')">✅ Verified</button>
+        <button class="chip" data-pf="aktif" onclick="setPgrF('aktif')">Aktif</button>
+      </div>
+      <div id="pengurus-list"></div>
+    </div>
+
+    <!-- STATISTIK -->
+    <div class="screen" id="screen-stat">
+      <div class="sec-title">📍 Sebaran Wilayah</div>
+      <div class="bar-wrap" id="stat-wilayah"></div>
+      <div class="sec-title">🎯 Minat & Bakat</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px" id="stat-minat"></div>
+      <div class="sec-title">🎓 Jenjang Pendidikan</div>
+      <div class="bar-wrap" id="stat-jenjang"></div>
+      <div class="sec-title">⚤ Jenis Kelamin</div>
+      <div class="bar-wrap" id="stat-jk"></div>
+      
+    </div>
+
+    <!-- SETTING -->
+    <div class="screen" id="screen-setting">
+      <div style="background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)">
+        <div style="font-size:15px;font-weight:700;color:var(--teks);margin-bottom:4px">🔐 Ganti Password</div>
+        <div style="font-size:12px;color:var(--teks2);margin-bottom:14px">Pastikan password kuat dan tidak dibagikan</div>
+        <div class="fg"><label class="fl">Password Lama</label><input type="password" id="pass-lama" placeholder="••••••••"></div>
+        <div class="fg"><label class="fl">Password Baru</label><input type="password" id="pass-baru" placeholder="••••••••"></div>
+        <div class="fg"><label class="fl">Konfirmasi Password Baru</label><input type="password" id="pass-konfirm" placeholder="••••••••"></div>
+        <button class="btn-primary" onclick="gantiPassword()">💾 Simpan Password Baru</button>
+      </div>
+
+      <div style="background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)">
+        <div style="font-size:15px;font-weight:700;color:var(--teks);margin-bottom:4px">📊 Export Data Excel</div>
+        <div style="font-size:12px;color:var(--teks2);margin-bottom:14px">Unduh seluruh data kader sebagai file Excel (.xlsx) — semua kolom biodata, status, dan GK Mover</div>
+        <button class="btn-primary" style="background:linear-gradient(135deg,#217346,#1a5c38);margin-bottom:8px" onclick="exportExcel()">📥 Unduh Excel (.xlsx)</button>
+        <button class="btn-primary" style="background:linear-gradient(135deg,#c8a84b,#e8c84b);color:#5a3000" onclick="exportData()">📥 Export JSON (backup)</button>
+        <button class="btn-primary" style="background:linear-gradient(135deg,#185FA5,#0C447C);margin-top:8px" onclick="exportExcelPengurus()">🏛️ Export Excel Pengurus</button>
+      </div><div style="background:#fff;border-radius:var(--radius);border:1px solid #F09595;padding:16px;box-shadow:var(--shadow)">
+        <div style="font-size:15px;font-weight:700;color:#c0392b;margin-bottom:4px">⚠️ Reset Data</div>
+        <div style="font-size:12px;color:var(--teks2);margin-bottom:14px">Hapus SEMUA data kader (tidak bisa dikembalikan!)</div>
+        <button style="width:100%;padding:12px;background:transparent;color:#c0392b;border:1.5px solid #F09595;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit" onclick="resetData()">🗑️ Reset Semua Data</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL: APPROVE (beri no. anggota) -->
+<div class="modal-overlay" id="modal-approve" onclick="closeModalOuter(event,'modal-approve')">
+  <div class="modal-sheet">
+    <div class="handle"></div>
+    <div class="modal-title">✅ Verifikasi Kader</div>
+    <div class="modal-sub" id="approve-sub">Berikan nomor anggota</div>
+    <div class="fg">
+      <label class="fl">No. Anggota <span style="font-size:11px;font-weight:400;color:var(--teks3)">(format: GK-TAHUN-NNN)</span></label>
+      <input type="text" id="approve-no" placeholder="GK-2024-001">
+    </div>
+    <div class="fg">
+      <label class="fl">Status</label>
+      <select id="approve-status"><option value="aktif">Aktif</option><option value="nonaktif">Non-aktif</option></select>
+    </div>
+    <div class="fg">
+      <label class="fl">Catatan Admin</label>
+      <textarea id="approve-catatan" placeholder="Opsional: catatan khusus untuk kader ini…"></textarea>
+    </div>
+    <button class="btn-primary" onclick="doApprove()">✅ Verifikasi & Simpan</button>
+    <button class="btn-secondary" onclick="closeModal('modal-approve')">Batal</button>
+  </div>
+</div>
+
+<!-- MODAL: TAMBAH MANUAL -->
+<div class="modal-overlay" id="modal-tambah" onclick="closeModalOuter(event,'modal-tambah')">
+  <div class="modal-sheet">
+    <div class="handle"></div>
+    <div class="modal-title">➕ Tambah Kader Manual</div>
+    <div class="modal-sub">Input langsung oleh admin kaderisasi</div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Nama Lengkap *</label><input type="text" id="m-nama" placeholder="Nama…"></div>
+      <div class="fg"><label class="fl">No. Anggota</label><input type="text" id="m-no" placeholder="GK-2024-…"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Tempat Lahir</label><input type="text" id="m-ttl-tempat" placeholder="Bengkulu…"></div>
+      <div class="fg"><label class="fl">Tanggal Lahir</label><div class="gkdate" id="gd-m-ttl-tgl"></div><input type="hidden" id="m-ttl-tgl"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Usia</label><input type="number" id="m-usia" placeholder="18"></div>
+      <div class="fg"><label class="fl">Jenis Kelamin</label>
+        <select id="m-jk"><option value="">Pilih</option><option>Laki-laki</option><option>Perempuan</option></select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Nama Orang Tua / Wali</label><input type="text" id="m-ortu" placeholder="Nama ayah/ibu/wali…"></div>
+    <div class="fg"><label class="fl">Domisili Sekarang</label><input type="text" id="m-domisili" placeholder="Kota domisili saat ini…"></div>
+    <div class="fg"><label class="fl">Jenjang</label>
+      <select id="m-jenjang">
+        <option value="">Pilih</option>
+        <option>SMP / sederajat</option><option>SMA / sederajat</option>
+        <option>Mahasiswa S1</option><option>Mahasiswa S2</option>
+        <option>Sarjana / alumni</option><option>Umum / non-pelajar</option>
+      </select>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Sekolah / Kampus</label><input type="text" id="m-instansi" placeholder="Unib…"></div>
+      <div class="fg"><label class="fl">Prodi / Jurusan</label><input type="text" id="m-prodi" placeholder="Hukum…"></div>
+    </div>
+    <div class="fg"><label class="fl">Wilayah / Kelurahan</label><input type="text" id="m-wilayah" placeholder="Kel. …"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">No. HP</label><input type="tel" id="m-hp" placeholder="0812…"></div>
+      <div class="fg"></div>
+    </div>
+    <div class="fg"><label class="fl">Minat & Bakat</label><input type="text" id="m-minat" placeholder="Desain, Dakwah…"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Status</label>
+        <select id="m-status"><option value="aktif">Aktif</option><option value="nonaktif">Non-aktif</option></select>
+      </div>
+      <div class="fg"><label class="fl">Terverifikasi</label>
+        <select id="m-verified"><option value="ya">Ya</option><option value="tidak">Tidak</option></select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Catatan</label><textarea id="m-catatan" placeholder="Opsional…"></textarea></div>
+    <button class="btn-primary" onclick="simpanManual()">💾 Simpan Kader</button>
+    <button class="btn-secondary" onclick="closeModal('modal-tambah')">Batal</button>
+  </div>
+</div>
+
+<!-- MODAL: UPDATE MOVER -->
+<div class="modal-overlay" id="modal-mover" onclick="closeModalOuter(event,'modal-mover')">
+  <div class="modal-sheet">
+    <div class="handle"></div>
+    <div class="modal-title">🧭 Update Status Mutasi</div>
+    <div class="modal-sub" id="mover-sub">Kader: —</div>
+    <div class="fg">
+      <label class="fl">Tahapan</label>
+      <select id="mover-stage">
+        <option value="lapor">⏳ Lapor Mutasi (baru masuk)</option>
+        <option value="proses">🔄 Sedang Diproses (serah terima data)</option>
+        <option value="selesai">✅ Selesai (aktif di lokasi baru)</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">Buddy / Mentor Lokal</label>
+      <input type="text" id="mover-buddy" placeholder="Nama buddy/mentor di wilayah tujuan…">
+    </div>
+    <div class="fg">
+      <label class="fl">Catatan Admin</label>
+      <textarea id="mover-admin-catatan" placeholder="Catatan tindak lanjut, kontak DPD tujuan, dll…"></textarea>
+    </div>
+    <button class="btn-primary" onclick="simpanMover()">💾 Simpan Update</button>
+    <button class="btn-secondary" onclick="closeModal('modal-mover')">Batal</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== GK SYNC: konfigurasi ===== */
+const GK_API='https://script.google.com/macros/s/AKfycbzKC2oCaFJ-SU9j-S03_I60ma8M2E_Vi0akGjpyOLwURr6YF6wwuDX-EZAWvl1q5rH-/exec'; // ← ganti dengan URL /exec (lihat PANDUAN)
+const GK_ON=()=>/^https:\/\//.test(GK_API);
+async function gkApi(p){
+  let r,j;
+  try{ r=await fetch(GK_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(p)}); j=await r.json(); }
+  catch(e){ e.net=true; throw e; }
+  if(!j.ok){ const e=new Error(j.err||'Gagal'); e.server=true; throw e; }
+  return j;
+}
+/* ===== Pilih tanggal: 3 dropdown (tanggal, bulan, tahun) ===== */
+const GK_BLN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function fmtTgl(s){ const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(s||''); return m?(+m[3])+' '+GK_BLN[+m[2]-1]+' '+m[1]:(s||''); }
+function gkDate(id,mode){
+  const h=document.getElementById(id), box=document.getElementById('gd-'+id); if(!h||!box) return;
+  const Y=new Date().getFullYear(), ys=[]; 
+  if(mode==='lahir'){ for(let y=Y-8;y>=1960;y--) ys.push(y); } else { for(let y=Y;y<=Y+6;y++) ys.push(y); }
+  const mk=(ph,opts)=>{ const s=document.createElement('select'); s.innerHTML='<option value="">'+ph+'</option>'+opts.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join(''); box.appendChild(s); return s; };
+  const d=mk('Tgl',Array.from({length:31},(_,i)=>[i+1,i+1])), m=mk('Bulan',GK_BLN.map((b,i)=>[i+1,b])), y=mk('Tahun',ys.map(v=>[v,v]));
+  const desc=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');
+  const p2=n=>String(n).padStart(2,'0');
+  function sync(){
+    const dim=(y.value&&m.value)?new Date(+y.value,+m.value,0).getDate():31;
+    Array.from(d.options).forEach(o=>{ if(o.value) o.hidden=+o.value>dim; });
+    if(+d.value>dim) d.value=dim;
+    desc.set.call(h,(d.value&&m.value&&y.value)?y.value+'-'+p2(m.value)+'-'+p2(d.value):'');
+  }
+  [d,m,y].forEach(s=>s.addEventListener('change',sync));
+  Object.defineProperty(h,'value',{ get(){return desc.get.call(h);}, set(v){
+    desc.set.call(h,v||''); const t=/^(\d{4})-(\d\d)-(\d\d)$/.exec(v||'');
+    if(t){ y.value=+t[1]; m.value=+t[2]; d.value=+t[3]; } else { d.value=m.value=y.value=''; } } });
+}
+(function(){ const st=document.createElement('style'); st.textContent='.gkdate{display:grid;grid-template-columns:.9fr 1.4fr 1.1fr;gap:8px}'; document.head.appendChild(st); })();
+const STORE     = 'gk-census-v2';
+const PASS_KEY  = 'gk-admin-pass';
+const DEFAULT_USER = 'kaderisasi';
+const DEFAULT_PASS = 'GKBengkulu2024';
+
+let isLoggedIn  = false;
+let activeF     = 'semua';
+let approveIdx  = -1;
+
+function getData(){ try{ return JSON.parse(localStorage.getItem(STORE)||'[]'); }catch(e){ return []; } }
+function setData(d){ localStorage.setItem(STORE, JSON.stringify(d)); gkCommit('anggota'); }
+function getPass(){ return localStorage.getItem(PASS_KEY) || DEFAULT_PASS; }
+
+// ===== LOGIN =====
+
+function doLogout(){
+  if(!confirm('Keluar dari admin?')) return;
+  isLoggedIn=false;
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-err').style.display='none';
+}
+
+// ===== TABS =====
+function sw(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===t));
+  document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',el.id==='screen-'+t));
+  if(t==='kader') renderKader();
+  if(t==='stat') renderStat();
+  if(t==='pending') renderPending();
+  if(t==='mover') renderMover();
+  if(t==='pengurus') renderPengurus();
+  if(t==='pengurus') renderPengurus();
+}
+
+// ===== RENDER =====
+function render(){
+  const list = getData();
+  const pending = list.filter(k=>k.pendingApproval && k.verified!=='ya');
+  document.getElementById('s0').textContent = list.length;
+  document.getElementById('s1').textContent = list.filter(k=>k.verified==='ya').length;
+  document.getElementById('s2').textContent = pending.length;
+  const wils = new Set(list.map(k=>k.wilayah).filter(Boolean));
+  document.getElementById('s3').textContent = wils.size;
+  const dot = document.getElementById('notif-dot');
+  dot.style.display = pending.length ? 'inline-block' : 'none';
+
+  const moverActive = list.filter(k=>k.mover && k.mover.status!=='selesai');
+  const dotM = document.getElementById('notif-dot-mover');
+  const dotM2 = document.getElementById('notif-dot-mover2');
+  dotM.style.display = moverActive.length ? 'inline-block' : 'none';
+  dotM2.style.display = moverActive.length ? 'inline-block' : 'none';
+
+  // Pengurus pending
+  const prgData = getPengurusData();
+  const prgPending = prgData.filter(p=>p.pendingApproval && p.verified!=='ya');
+  const dotP = document.getElementById('notif-dot-prg');
+  if(dotP) dotP.style.display = prgPending.length ? 'inline-block' : 'none';
+
+  renderRecent();
+  renderPending();
+  renderKader();
+  renderMover();
+  // Pengurus notif dot
+  const pgPend = getPgData().filter(k=>k.pendingApproval&&k.verified!=='ya');
+  const dotPgr = document.getElementById('notif-dot-pgr');
+  if(dotPgr) dotPgr.style.display = pgPend.length ? 'inline-block' : 'none';
+}
+
+function initials(n){ const p=(n||'').trim().split(/\s+/); return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():(n||'??').slice(0,2).toUpperCase(); }
+function avi(i){ return ['av0','av1','av2','av3','av4'][i%5]; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2800); }
+
+// ===== RECENT =====
+function renderRecent(){
+  const list = getData().slice(0,6);
+  const el = document.getElementById('recent-list');
+  if(!list.length){ el.innerHTML=`<div style="text-align:center;padding:30px;color:var(--teks3)"><div style="font-size:32px;margin-bottom:8px;opacity:.3">👥</div>Belum ada kader.</div>`; return; }
+  el.innerHTML = list.map((k,i)=>kaderCard(k,i,true)).join('');
+}
+
+// ===== PENDING =====
+function renderPending(){
+  const list = getData();
+  const pending = list.filter(k=>k.pendingApproval && k.verified!=='ya');
+  const el = document.getElementById('pending-list');
+  if(!pending.length){
+    el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--teks3)"><div style="font-size:36px;margin-bottom:10px;opacity:.3">✅</div>Tidak ada pendaftaran pending.<br>Semua sudah diverifikasi!</div>`;
+    return;
+  }
+  el.innerHTML = pending.map((k,i)=>{
+    const realIdx = list.indexOf(k);
+    return `<div class="kc">
+      <div class="kc-header">
+        <div class="av ${avi(realIdx)}">${initials(k.nama)}</div>
+        <div class="kc-info">
+          <div class="kc-nama">${esc(k.nama)}</div>
+          <div class="kc-no">⏳ Menunggu verifikasi</div>
+          <div class="kc-meta">${esc(k.wilayah||'—')} · ${esc(k.jenjang||'—')}</div>
+        </div>
+      </div>
+      <div class="kc-fields show" id="pf-${realIdx}">
+        <div class="kf-item"><div class="kf-label">HP</div><div class="kf-val">${esc(k.hp||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Jenjang</div><div class="kf-val">${esc(k.jenjang||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Kampus</div><div class="kf-val">${esc(k.instansi||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Prodi</div><div class="kf-val">${esc(k.prodi||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Periode</div><div class="kf-val">2025–2030</div></div>
+        <div class="kf-item"><div class="kf-label">Minat</div><div class="kf-val">${esc(k.minat||'—')}</div></div>
+        ${k.motivasi?`<div class="kf-item" style="grid-column:1/-1"><div class="kf-label">Motivasi</div><div class="kf-val">${esc(k.motivasi)}</div></div>`:''}
+        ${k.org?`<div class="kf-item" style="grid-column:1/-1"><div class="kf-label">Org. sebelumnya</div><div class="kf-val">${esc(k.org)}</div></div>`:''}
+      </div>
+      <div class="kc-actions">
+        <button class="btn-sm btn-approve" onclick="openApprove(${realIdx})">✅ Verifikasi</button>
+        <button class="btn-sm btn-reject" onclick="tolakPending(${realIdx})">❌ Tolak</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== GK MOVER =====
+const MOVER_LABEL = {
+  lapor:   {text:'⏳ Lapor Mutasi', cls:'mover-lapor'},
+  proses:  {text:'🔄 Diproses', cls:'mover-proses'},
+  selesai: {text:'✅ Selesai', cls:'mover-selesai'}
+};
+
+function renderMover(){
+  const list = getData();
+  const movers = list.filter(k=>k.mover);
+  const el = document.getElementById('mover-list');
+  if(!movers.length){
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--teks3)"><div style="font-size:36px;margin-bottom:10px;opacity:.3">🧭</div>Belum ada laporan mutasi.</div>`;
+    return;
+  }
+  movers.sort((a,b)=>{
+    const aDone = a.mover.status==='selesai', bDone = b.mover.status==='selesai';
+    if(aDone!==bDone) return aDone?1:-1;
+    return (b.mover.submitAt||0)-(a.mover.submitAt||0);
+  });
+  el.innerHTML = movers.map(k=>{
+    const ri = list.indexOf(k);
+    const m = k.mover;
+    const lbl = MOVER_LABEL[m.status]||MOVER_LABEL.lapor;
+    return `<div class="mover-card">
+      <div class="mover-row">
+        <div>
+          <div class="kc-nama">${esc(k.nama)}</div>
+          <div class="kc-no">${esc(k.noanggota||'—')}</div>
+        </div>
+        <span class="mover-stage ${lbl.cls}">${lbl.text}</span>
+      </div>
+      <div class="mover-meta-grid">
+        <div class="kf-item"><div class="kf-label">Asal Wilayah</div><div class="kf-val">${esc(k.wilayah||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Tujuan</div><div class="kf-val">${esc(m.tujuan||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Alasan</div><div class="kf-val">${esc(m.alasan||'—')}</div></div>
+        <div class="kf-item" style="grid-column:1/-1"><div class="kf-label">Keinginan di Tempat Baru</div><div class="kf-val">${esc(m.keinginan||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Instansi Tujuan</div><div class="kf-val">${esc(m.instansiTujuan||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Perkiraan Pindah</div><div class="kf-val">${esc(fmtTgl(m.tanggal)||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Buddy</div><div class="kf-val">${esc(m.buddy||'Belum ditentukan')}</div></div>
+        ${m.catatan?`<div class="kf-item" style="grid-column:1/-1"><div class="kf-label">Catatan Kader</div><div class="kf-val">${esc(m.catatan)}</div></div>`:''}
+        ${m.adminCatatan?`<div class="kf-item" style="grid-column:1/-1"><div class="kf-label">Catatan Admin</div><div class="kf-val">${esc(m.adminCatatan)}</div></div>`:''}
+      </div>
+      <div class="kc-actions">
+        <button class="btn-sm btn-approve" onclick="openMoverUpdate(${ri})">🧭 Update Status</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let moverIdx = -1;
+function openMoverUpdate(idx){
+  moverIdx = idx;
+  const k = getData()[idx];
+  const m = k.mover;
+  document.getElementById('mover-sub').textContent = 'Kader: ' + k.nama + ' (' + (k.noanggota||'—') + ')';
+  document.getElementById('mover-stage').value = m.status || 'lapor';
+  document.getElementById('mover-buddy').value = m.buddy || '';
+  document.getElementById('mover-admin-catatan').value = m.adminCatatan || '';
+  document.getElementById('modal-mover').classList.add('open');
+}
+
+function simpanMover(){
+  const list = getData();
+  const k = list[moverIdx];
+  if(!k || !k.mover) return;
+  k.mover.status = document.getElementById('mover-stage').value;
+  k.mover.buddy = document.getElementById('mover-buddy').value.trim();
+  k.mover.adminCatatan = document.getElementById('mover-admin-catatan').value.trim();
+  k.mover.updatedAt = Date.now();
+  setData(list);
+  closeModal('modal-mover');
+  render();
+  toast('✅ Status mutasi ' + k.nama + ' diperbarui!');
+}
+
+// ===== KADER LIST =====
+function setF(f){ activeF=f; document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.f===f)); renderKader(); }
+
+function renderKader(){
+  const q = (document.getElementById('srch-input').value||'').toLowerCase();
+  const list = getData();
+  const filtered = list.filter((k,i)=>{
+    const m = !q||k.nama.toLowerCase().includes(q)||(k.noanggota||'').toLowerCase().includes(q)||(k.wilayah||'').toLowerCase().includes(q)||(k.hp||'').includes(q);
+    const pend = k.pendingApproval && k.verified!=='ya';
+    const fm = activeF==='semua' || activeF===k.status || (activeF==='verified'&&k.verified==='ya') || (activeF==='pending'&&pend);
+    return m&&fm;
+  });
+  const el = document.getElementById('kader-list');
+  if(!filtered.length){ el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--teks3)"><div style="font-size:32px;margin-bottom:8px;opacity:.3">🔍</div>Tidak ada kader ditemukan.</div>`; return; }
+  el.innerHTML = filtered.map((k)=>{ const ri=list.indexOf(k); return kaderCard(k,ri,false); }).join('');
+}
+
+function kaderCard(k, ri, simple){
+  const pend = k.pendingApproval && k.verified!=='ya';
+  return `<div class="kc">
+    <div class="kc-header">
+      <div class="av ${avi(ri)}">${initials(k.nama)}</div>
+      <div class="kc-info">
+        <div class="kc-nama">${esc(k.nama)}</div>
+        <div class="kc-no">${esc(k.noanggota||'Belum ada no. anggota')}</div>
+        <div class="kc-meta">${esc(k.wilayah||'—')}</div>
+        <div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">
+          <span class="badge ${k.status==='aktif'?'b-aktif':'b-nonaktif'}">${k.status==='aktif'?'Aktif':'Non-aktif'}</span>
+          <span class="badge ${k.verified==='ya'?'b-verified':pend?'b-pending':'b-nonaktif'}">${k.verified==='ya'?'✅ Verified':pend?'⏳ Pending':'Belum verified'}</span>
+          ${k.mover?`<span class="badge ${k.mover.status==='selesai'?'b-verified':'b-pending'}">🧭 ${MOVER_LABEL[k.mover.status]?MOVER_LABEL[k.mover.status].text:'Mutasi'}</span>`:''}
+        </div>
+      </div>
+    </div>
+    ${!simple?`
+    <div class="kc-fields" id="kf-${ri}">
+      <div class="kf-item"><div class="kf-label">HP</div><div class="kf-val">${esc(k.hp||'—')}</div></div>
+      <div class="kf-item"><div class="kf-label">Usia</div><div class="kf-val">${k.usia?k.usia+' th':'—'}</div></div>
+      <div class="kf-item"><div class="kf-label">Jenjang</div><div class="kf-val">${esc(k.jenjang||'—')}</div></div>
+      <div class="kf-item"><div class="kf-label">Kampus</div><div class="kf-val">${esc(k.instansi||'—')}</div></div>
+      <div class="kf-item"><div class="kf-label">Prodi</div><div class="kf-val">${esc(k.prodi||'—')}</div></div>
+      <div class="kf-item"><div class="kf-label">Minat</div><div class="kf-val">${esc(k.minat||'—')}</div></div>
+      ${k.catatan?`<div class="kf-item" style="grid-column:1/-1"><div class="kf-label">Catatan</div><div class="kf-val">${esc(k.catatan)}</div></div>`:''}
+    </div>
+    <div class="kc-actions">
+      <button class="btn-sm btn-approve" onclick="toggleDetail('kf-${ri}')">🔍 Detail</button>
+      ${k.verified==='ya'?'':`<button class="btn-sm btn-approve" onclick="openApprove(${ri})">✅ Verifikasi</button>`}
+      <button class="btn-sm btn-danger-sm" onclick="hapusKader(${ri})">🗑️</button>
+    </div>`:''}
+  </div>`;
+}
+
+function toggleDetail(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.toggle('show');
+}
+
+// ===== APPROVE =====
+function openApprove(idx){
+  approveIdx = idx;
+  const k = getData()[idx];
+  document.getElementById('approve-sub').textContent = 'Verifikasi: ' + k.nama;
+  const list = getData();
+  const tahun = '2025';
+  const verifiedCount = list.filter(x=>x.verified==='ya').length + 1;
+  document.getElementById('approve-no').value = 'GK-' + tahun + '-' + String(verifiedCount).padStart(3,'0');
+  document.getElementById('approve-status').value = 'aktif';
+  document.getElementById('approve-catatan').value = '';
+  document.getElementById('modal-approve').classList.add('open');
+}
+
+function doApprove(){
+  const no = document.getElementById('approve-no').value.trim();
+  if(!no){ toast('⚠️ No. anggota wajib diisi!'); return; }
+  if(window._approveMode === 'pengurus'){
+    const list = getPgData();
+    const pg = list[pgrApproveIdx];
+    if(!pg){ closeModal('modal-approve'); return; }
+    pg.noanggota = no.toUpperCase();
+    pg.verified = 'ya';
+    pg.status = document.getElementById('approve-status').value;
+    pg.catatan = document.getElementById('approve-catatan').value.trim();
+    pg.pendingApproval = false;
+    pg.approvedAt = Date.now();
+    setPgData(list);
+    closeModal('modal-approve');
+    renderPengurus();
+    window._approveMode = 'kader';
+    toast('✅ Pengurus ' + pg.nama + ' berhasil diverifikasi!');
+  } else {
+    const list = getData();
+    const k = list[approveIdx];
+    if(!k) return;
+    k.noanggota = no.toUpperCase();
+    k.verified = 'ya';
+    k.status = document.getElementById('approve-status').value;
+    k.catatan = document.getElementById('approve-catatan').value.trim();
+    k.pendingApproval = false;
+    k.approvedAt = Date.now();
+    setData(list);
+    closeModal('modal-approve');
+    render();
+    toast('✅ ' + k.nama + ' berhasil diverifikasi!');
+  }
+}
+
+function tolakPending(idx){
+  const list = getData();
+  const k = list[idx];
+  if(!confirm('Tolak & hapus pendaftaran ' + k.nama + '?')) return;
+  list.splice(idx,1);
+  setData(list);
+  render();
+  toast('❌ Pendaftaran ' + k.nama + ' ditolak.');
+}
+
+function hapusKader(idx){
+  const list = getData();
+  const k = list[idx];
+  if(!confirm('Hapus kader ' + k.nama + '?')) return;
+  list.splice(idx,1);
+  setData(list);
+  render();
+  toast('🗑️ Kader ' + k.nama + ' dihapus.');
+}
+
+// ===== TAMBAH MANUAL =====
+function openTambahManual(){ document.getElementById('modal-tambah').classList.add('open'); }
+
+function simpanManual(){
+  const nama = document.getElementById('m-nama').value.trim();
+  if(!nama){ toast('⚠️ Nama wajib diisi!'); return; }
+  const list = getData();
+  const tahun = '2025';
+  const noVal = document.getElementById('m-no').value.trim() || ('GK-'+tahun+'-'+String(list.length+1).padStart(3,'0'));
+  const k = {
+    id:Date.now(), nama, noanggota:noVal.toUpperCase(),
+    ttlTempat:document.getElementById('m-ttl-tempat').value.trim(),
+    ttlTgl:document.getElementById('m-ttl-tgl').value,
+    usia:document.getElementById('m-usia').value.trim(),
+    jk:document.getElementById('m-jk').value,
+    ortu:document.getElementById('m-ortu').value.trim(),
+    domisili:document.getElementById('m-domisili').value.trim(),
+    jenjang:document.getElementById('m-jenjang').value,
+    instansi:document.getElementById('m-instansi').value.trim(),
+    prodi:document.getElementById('m-prodi').value.trim(),
+    wilayah:document.getElementById('m-wilayah').value.trim(),
+    hp:document.getElementById('m-hp').value.trim(),
+    periode:'2025–2030', minat:document.getElementById('m-minat').value.trim(),
+    status:document.getElementById('m-status').value,
+    verified:document.getElementById('m-verified').value,
+    catatan:document.getElementById('m-catatan').value.trim(),
+    pendingApproval:false, submitAt:Date.now()
+  };
+  list.unshift(k);
+  setData(list);
+  ['m-nama','m-no','m-ttl-tempat','m-ttl-tgl','m-usia','m-ortu','m-domisili','m-instansi','m-prodi','m-wilayah','m-hp','m-minat','m-catatan'].forEach(id=>document.getElementById(id).value='');
+  ['m-jk','m-jenjang'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('m-status').value='aktif';
+  document.getElementById('m-verified').value='ya';
+  closeModal('modal-tambah');
+  render();
+  toast('✅ Kader ' + nama + ' berhasil ditambahkan!');
+}
+
+// ===== STATISTIK =====
+function renderStat(){
+  const list = getData();
+  const barSection = (mapObj, elId, colorClass) => {
+    const arr = Object.entries(mapObj).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    const max = arr.length ? arr[0][1] : 1;
+    document.getElementById(elId).innerHTML = arr.length ? arr.map(([k,n])=>`
+      <div class="bar-item">
+        <div class="bar-item-label"><span>${esc(k)}</span><span>${n}</span></div>
+        <div class="bar-track"><div class="bar-fill ${colorClass}" style="width:${Math.round(n/max*100)}%"></div></div>
+      </div>`).join('')
+      :`<div style="font-size:13px;color:var(--teks3)">Belum ada data.</div>`;
+  };
+  const wMap={};list.forEach(k=>{if(k.wilayah)wMap[k.wilayah]=(wMap[k.wilayah]||0)+1;});
+  barSection(wMap,'stat-wilayah','bar-merah');
+  const mMap={};list.forEach(k=>{(k.minat||'').split(',').map(m=>m.trim()).filter(Boolean).forEach(m=>mMap[m]=(mMap[m]||0)+1);});
+  document.getElementById('stat-minat').innerHTML = Object.entries(mMap).sort((a,b)=>b[1]-a[1]).slice(0,15)
+    .map(([m,n])=>`<span class="badge b-aktif" style="font-size:12px;padding:4px 12px">${esc(m)} <b>${n}</b></span>`).join('')
+    ||`<span style="font-size:13px;color:var(--teks3)">Belum ada data.</span>`;
+  const jMap={};list.forEach(k=>{if(k.jenjang)jMap[k.jenjang]=(jMap[k.jenjang]||0)+1;});
+  barSection(jMap,'stat-jenjang','bar-emas');
+  const lk=list.filter(k=>k.jk==='Laki-laki').length, pr=list.filter(k=>k.jk==='Perempuan').length;
+  const jkMax=Math.max(lk,pr,1);
+  document.getElementById('stat-jk').innerHTML=`
+    <div class="bar-item"><div class="bar-item-label"><span>Laki-laki</span><span>${lk}</span></div><div class="bar-track"><div class="bar-fill bar-merah" style="width:${Math.round(lk/jkMax*100)}%"></div></div></div>
+    <div class="bar-item"><div class="bar-item-label"><span>Perempuan</span><span>${pr}</span></div><div class="bar-track"><div class="bar-fill bar-emas" style="width:${Math.round(pr/jkMax*100)}%"></div></div></div>`;
+}
+
+
+
+
+
+// ===== MODAL =====
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function closeModalOuter(e,id){ if(e.target===document.getElementById(id)) closeModal(id); }
+
+// ===== SETTING =====
+
+function exportData(){
+  const data = getData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.download = 'GK-Census-Export-'+new Date().toISOString().slice(0,10)+'.json';
+  a.href = URL.createObjectURL(blob); a.click();
+  toast('📥 Data diekspor!');
+}
+
+function resetData(){
+  if(!confirm('YAKIN reset SEMUA data kader? Ini tidak bisa dibatalkan!')) return;
+  if(!confirm('Konfirmasi sekali lagi: hapus semua data kader?')) return;
+  localStorage.removeItem(STORE);
+  if(GK_ON()){ SNAP.anggota={}; QUEUE.push({a:'adminReset',t:'anggota'}); gkPush(); }
+  render(); toast('🗑️ Semua data kader dihapus.');
+}
+
+// ===== EXCEL EXPORT =====
+function exportExcel(){
+  const list = getData();
+  if(!list.length){ toast('⚠️ Tidak ada data untuk diekspor.'); return; }
+  const cols = ['No','Nama','No. Anggota','Tempat Lahir','Tanggal Lahir','Usia','Jenis Kelamin','Nama Orang Tua','Domisili','Wilayah GK','Alamat','Jenjang','Sekolah/Kampus','Prodi/Jurusan','Angkatan','No. HP','Email','Minat & Bakat','Pengalaman Org','Motivasi','Status','Terverifikasi','Periode','Catatan Admin','Status Mutasi','Tujuan Mutasi','Buddy'];
+  const nl = '\n';
+  const rows = list.map((k,i) => [
+    i+1, k.nama||'', k.noanggota||'', k.ttlTempat||'', k.ttlTgl||'',
+    k.usia||'', k.jk||'', k.ortu||'', k.domisili||'', k.wilayah||'',
+    (k.alamat||'').split(nl).join(' '),
+    k.jenjang||'', k.instansi||'', k.prodi||'', k.angkatan||'',
+    k.hp||'', k.email||'', k.minat||'',
+    (k.org||'').split(nl).join(' '),
+    (k.motivasi||'').split(nl).join(' '),
+    k.status||'', k.verified==='ya'?'Ya':'Tidak', '2025–2030',
+    (k.catatan||'').split(nl).join(' '),
+    k.mover ? k.mover.status : '',
+    k.mover ? (k.mover.tujuan||'') : '',
+    k.mover ? (k.mover.buddy||'') : ''
+  ]);
+    const csvEsc = v=>{ const s=String(v); return (s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s; };
+  const csvStr = '\uFEFF' + [cols,...rows].map(r=>r.map(csvEsc).join(',')).join('\r\n');
+  const blob = new Blob([csvStr],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.download = 'DataKader-GK-Bengkulu-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.href = URL.createObjectURL(blob); a.click();
+  toast('📊 Data diekspor! Buka di Excel/Google Sheets.');
+}
+
+
+// ===== PENGURUS =====
+const PRG_STORE = 'gk-census-pengurus-v1';
+function getPengurusData(){ try{ return JSON.parse(localStorage.getItem(PRG_STORE)||'[]'); }catch(e){ return []; } }
+function setPengurusData(d){ localStorage.setItem(PRG_STORE, JSON.stringify(d)); gkCommit('pengurus'); }
+
+let activeFP = 'semua';
+let approvePengurusIdx = -1;
+
+function setFP(f){
+  activeFP = f;
+  document.querySelectorAll('[data-fp]').forEach(c=>c.classList.toggle('on', c.dataset.fp===f));
+  renderPengurus();
+}
+
+function renderPengurus(){
+  const q = (document.getElementById('srch-prg')||{}).value||'';
+  const list = getPengurusData();
+  const filtered = list.filter(k=>{
+    const m = !q || k.nama.toLowerCase().includes(q.toLowerCase()) || (k.posisi||'').toLowerCase().includes(q.toLowerCase()) || (k.bidang||'').toLowerCase().includes(q.toLowerCase());
+    const pend = k.pendingApproval && k.verified!=='ya';
+    const fm = activeFP==='semua' || (activeFP==='pending'&&pend) || (activeFP==='verified'&&k.verified==='ya') || activeFP===k.status;
+    return m&&fm;
+  });
+  const el = document.getElementById('pengurus-list');
+  if(!el) return;
+  if(!filtered.length){
+    el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--teks3)"><div style="font-size:36px;margin-bottom:10px;opacity:.3">🏛️</div>Tidak ada data pengurus ditemukan.</div>`;
+    return;
+  }
+  const POSISI_ICON = {'Ketua':'👑','Sekretaris Umum':'📝','Bendahara Umum':'💰','Ketua Bidang':'🎯','Sekretaris Bidang':'📋','Anggota Bidang':'🤝'};
+  el.innerHTML = filtered.map((k)=>{
+    const ri = list.indexOf(k);
+    const pend = k.pendingApproval && k.verified!=='ya';
+    const icon = POSISI_ICON[k.posisi]||'🏛️';
+    return `<div class="kc" style="flex-direction:column;align-items:stretch">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <div class="av av${ri%5}" style="flex-shrink:0">${initials(k.nama)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="kc-nama">${esc(k.nama)}</div>
+          <div class="kc-no">${icon} ${esc(k.posisi||'—')}${k.bidang?' — Bid. '+esc(k.bidang):''}</div>
+          <div class="kc-meta">${esc(k.domisili||k.wilayah||'—')} · Periode 2025–2030</div>
+          <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">
+            <span class="badge ${k.status==='aktif'?'b-aktif':'b-nonaktif'}">${esc(k.status||'aktif')}</span>
+            <span class="badge ${k.verified==='ya'?'b-verified':pend?'b-pending':'b-nonaktif'}">${k.verified==='ya'?'✅ Verified':pend?'⏳ Pending':'Belum'}</span>
+            ${k.nopengurus?`<span class="badge b-verified">${esc(k.nopengurus)}</span>`:''}
+          </div>
+        </div>
+      </div>
+      <div class="kc-fields" id="prgf-${ri}">
+        <div class="kf-item"><div class="kf-label">TTL</div><div class="kf-val">${esc((k.ttlTempat||'—')+', '+(k.ttlTgl||'—'))}</div></div>
+        <div class="kf-item"><div class="kf-label">Orang Tua</div><div class="kf-val">${esc(k.ortu||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Domisili</div><div class="kf-val">${esc(k.domisili||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">HP</div><div class="kf-val">${esc(k.hp||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Jenjang</div><div class="kf-val">${esc(k.jenjang||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Kampus</div><div class="kf-val">${esc(k.instansi||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Prodi</div><div class="kf-val">${esc(k.prodi||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Periode</div><div class="kf-val">${esc(k.periode||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Minat</div><div class="kf-val">${esc(k.minat||'—')}</div></div>
+        
+        ${k.motivasi?`<div class="kf-item" style="grid-column:1/-1"><div class="kf-label">Motivasi</div><div class="kf-val">${esc(k.motivasi)}</div></div>`:''}
+      </div>
+      <div class="kc-actions">
+        <button class="btn-sm btn-approve" onclick="toggleDetail('prgf-${ri}')">🔍 Detail</button>
+        ${pend?`<button class="btn-sm btn-approve" onclick="openApprovePengurus(${ri})">✅ Verifikasi</button>`:''}
+        
+        <button class="btn-sm btn-danger-sm" onclick="hapusPengurus(${ri})">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openApprovePengurus(idx){
+  approvePengurusIdx = idx;
+  const k = getPengurusData()[idx];
+  const tahun = '2025';
+  const count = getPengurusData().filter(x=>x.verified==='ya').length + 1;
+  document.getElementById('approve-sub').textContent = 'Verifikasi Pengurus: ' + k.nama;
+  document.getElementById('approve-no').value = 'GKP-'+tahun+'-'+String(count).padStart(3,'0');
+  document.getElementById('approve-no').placeholder = 'GKP-TAHUN-NNN';
+  document.getElementById('approve-status').value = 'aktif';
+  document.getElementById('approve-catatan').value = '';
+  // reuse modal approve, but override doApprove
+  window._approveMode = 'pengurus';
+  document.getElementById('modal-approve').classList.add('open');
+}
+
+function hapusPengurus(idx){
+  const list = getPengurusData();
+  if(!confirm('Hapus pengurus '+list[idx].nama+'?')) return;
+  list.splice(idx,1);
+  setPengurusData(list);
+  renderPengurus();
+  toast('🗑️ Data pengurus dihapus.');
+}
+
+
+
+
+
+
+// ===== PENGURUS =====
+const PGSTORE = 'gk-census-pengurus-v1';
+function getPgData(){ try{ return JSON.parse(localStorage.getItem(PGSTORE)||'[]'); }catch(e){ return []; } }
+function setPgData(d){ localStorage.setItem(PGSTORE, JSON.stringify(d)); gkCommit('pengurus'); }
+
+let pgrF = 'semua';
+let pgrApproveIdx = -1;
+
+function setPgrF(f){
+  pgrF=f;
+  document.querySelectorAll('[data-pf]').forEach(c=>c.classList.toggle('on',c.dataset.pf===f));
+  renderPengurus();
+}
+
+function renderPengurus(){
+  const q=(document.getElementById('pgr-srch').value||'').toLowerCase();
+  const list=getPgData();
+  const filtered=list.filter(k=>{
+    const m=!q||k.nama.toLowerCase().includes(q)||(k.posisi||'').toLowerCase().includes(q)||(k.bidang||'').toLowerCase().includes(q)||(k.noanggota||'').toLowerCase().includes(q);
+    const pend=k.pendingApproval&&k.verified!=='ya';
+    const fm=pgrF==='semua'||(pgrF==='pending'&&pend)||(pgrF==='verified'&&k.verified==='ya')||pgrF===k.status;
+    return m&&fm;
+  });
+  const el=document.getElementById('pengurus-list');
+  if(!list.length){el.innerHTML=`<div class="empty" style="text-align:center;padding:40px;color:var(--teks3)"><div style="font-size:36px;opacity:.3;margin-bottom:10px">🏅</div>Belum ada data pengurus dari portal.</div>`;return;}
+  if(!filtered.length){el.innerHTML=`<div style="text-align:center;padding:30px;color:var(--teks3)">Tidak ditemukan.</div>`;return;}
+
+  const posCls={'Ketua Umum':'pos-ket','Wakil Ketua':'pos-ket','Sekretaris Umum':'pos-sek','Bendahara Umum':'pos-ben','Ketua Bidang':'pos-ketbid','Sekretaris Bidang':'pos-sekbid','Anggota Bidang':'pos-angg'};
+
+  el.innerHTML=filtered.map(k=>{
+    const ri=list.indexOf(k);
+    const pend=k.pendingApproval&&k.verified!=='ya';
+    const cls=posCls[k.posisi]||'pos-angg';
+    return `<div class="pgr-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="kc-nama">${esc(k.nama)}</div>
+          <div class="kc-no">${esc(k.noanggota||'Belum ada no. anggota')}</div>
+          <span class="pgr-posisi ${cls}">${esc(k.posisi||'—')}</span>
+          ${k.bidang?`<span class="pgr-posisi pos-sekbid" style="margin-left:4px">Bid. ${esc(k.bidang)}</span>`:''}
+        </div>
+        <span class="badge ${k.verified==='ya'?'b-verified':pend?'b-pending':'b-nonaktif'}">${k.verified==='ya'?'✅ Verified':pend?'⏳ Pending':'—'}</span>
+      </div>
+      <div class="mover-meta-grid" style="margin-top:10px;border-top:1px solid #f5f5f5;padding-top:8px">
+        <div class="kf-item"><div class="kf-label">TTL</div><div class="kf-val">${esc((k.ttlTempat||'—')+', '+(k.ttlTgl||'—'))}</div></div>
+        <div class="kf-item"><div class="kf-label">Orang Tua</div><div class="kf-val">${esc(k.ortu||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Domisili</div><div class="kf-val">${esc(k.domisili||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">HP</div><div class="kf-val">${esc(k.hp||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Periode</div><div class="kf-val">2025–2030</div></div>
+        <div class="kf-item"><div class="kf-label">Periode</div><div class="kf-val">${esc(k.periode||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Jenjang</div><div class="kf-val">${esc(k.jenjang||'—')}</div></div>
+        <div class="kf-item"><div class="kf-label">Kampus</div><div class="kf-val">${esc(k.instansi||'—')}</div></div>
+        ${k.komitmen?`<div class="kf-item" style="grid-column:1/-1"><div class="kf-label">Komitmen</div><div class="kf-val">${esc(k.komitmen)}</div></div>`:''}
+      </div>
+      <div class="kc-actions" style="margin-top:10px;padding-top:10px;border-top:1px solid #f5f5f5;display:flex;gap:8px;flex-wrap:wrap">
+        ${k.verified!=='ya'?`<button class="btn-sm btn-approve" onclick="openPgrApprove(${ri})">✅ Verifikasi</button>`:''}
+        ${k.verified==='ya'?`<button class="btn-sm btn-emas" onclick="toggleStatusPengurus(${ri})">${k.status==='nonaktif'?'▶️ Jadikan Aktif':'⏸️ Jadikan Non-aktif'}</button>`:''}
+        <button class="btn-sm btn-danger-sm" onclick="hapusPengurus(${ri})">🗑️ Hapus</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// modal approve pengurus — reuse modal-approve
+function openPgrApprove(idx){
+  pgrApproveIdx = idx;
+  const k = getPgData()[idx];
+  document.getElementById('approve-sub').textContent = '[Pengurus] ' + k.nama + ' — ' + (k.posisi||'—');
+  const list = getPgData();
+  const yr = '2025';
+  const cnt = list.filter(x=>x.verified==='ya').length + 1;
+  document.getElementById('approve-no').value = 'GKP-' + yr + '-' + String(cnt).padStart(3,'0');
+  document.getElementById('approve-status').value = 'aktif';
+  document.getElementById('approve-catatan').value = '';
+  // hijack doApprove to handle pengurus
+  window._approveMode = 'pengurus';
+  document.getElementById('modal-approve').classList.add('open');
+}
+
+function toggleStatusPengurus(idx){
+  const list=getPgData(), k=list[idx]; if(!k) return;
+  k.status = k.status==='nonaktif' ? 'aktif' : 'nonaktif';
+  setPgData(list); renderPengurus();
+  toast('✅ '+k.nama+' sekarang '+(k.status==='aktif'?'Aktif':'Non-aktif'));
+}
+function hapusPengurus(idx){
+  const list=getPgData();
+  if(!confirm('Hapus pengurus '+list[idx].nama+'?')) return;
+  list.splice(idx,1);
+  setPgData(list);
+  renderPengurus();
+  toast('🗑️ Data pengurus dihapus.');
+}
+
+
+
+window._approveMode='kader';
+
+// Export Excel pengurus
+function exportExcelPengurus(){
+  const list=getPgData();
+  if(!list.length){ toast('⚠️ Belum ada data pengurus.'); return; }
+  const cols=['No','Nama','No. Anggota','Posisi','Bidang','Tahun Masuk','Periode','TTL Tempat','TTL Tgl','Usia','JK','Orang Tua','Domisili','Wilayah','Jenjang','Kampus','Prodi','Angkatan','HP','Email','Minat','Org Sebelumnya','Komitmen','Status','Verified'];
+  const nl='\n';
+  const rows=list.map((k,i)=>[i+1,k.nama||'',k.noanggota||'',k.posisi||'',k.bidang||'',k.tahunMasuk||'',k.periode||'',k.ttlTempat||'',k.ttlTgl||'',k.usia||'',k.jk||'',k.ortu||'',k.domisili||'',k.wilayah||'',k.jenjang||'',k.instansi||'',k.prodi||'',k.angkatan||'',k.hp||'',k.email||'',k.minat||'',(k.org||'').split(nl).join(' '),(k.komitmen||'').split(nl).join(' '),k.status||'',k.verified==='ya'?'Ya':'Tidak']);
+  const csvEsc=v=>{const s=String(v);return(s.includes(',')||s.includes('"'))?'"'+s.replace(/"/g,'""')+'"':s;};
+  const csvStr='\uFEFF'+[cols,...rows].map(r=>r.map(csvEsc).join(',')).join('\r\n');
+  const blob=new Blob([csvStr],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.download='DataPengurus-GK-Bengkulu-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.href=URL.createObjectURL(blob); a.click();
+  toast('📊 Data pengurus diekspor!');
+}
+
+// ===== INIT =====
+// Cek sesi login sederhana (dalam satu sesi tab)
+/* ===== GK SYNC admin ===== */
+let ADMIN_PASS='';
+const SNAP={anggota:{},pengurus:{}}, QUEUE=[];
+const GK_TBL=()=>({anggota:STORE,pengurus:PRG_STORE});
+let gkPushing=false, gkTimer=null;
+const snapOf=a=>{ const m={}; a.forEach(r=>m[r.id]=JSON.stringify(r)); return m; };
+function gkCommit(t){
+  if(!GK_ON()) return;
+  let cur=[]; try{cur=JSON.parse(localStorage.getItem(GK_TBL()[t])||'[]');}catch(e){}
+  const s=SNAP[t], seen={};
+  cur.forEach(r=>{ seen[r.id]=1; const j=JSON.stringify(r); if(s[r.id]!==j){ s[r.id]=j; QUEUE.push({a:'adminSave',t,rec:r}); } });
+  Object.keys(s).forEach(id=>{ if(!seen[id]){ delete s[id]; QUEUE.push({a:'adminDelete',t,id}); } });
+  gkPush();
+}
+async function gkPush(){
+  if(gkPushing) return; gkPushing=true;
+  while(QUEUE.length){
+    try{ await gkApi(Object.assign({pass:ADMIN_PASS},QUEUE[0])); QUEUE.shift(); }
+    catch(e){ if(e.server){ toast('⚠️ '+e.message); QUEUE.shift(); } else { toast('📡 Offline — perubahan akan dikirim ulang'); await new Promise(r=>setTimeout(r,8000)); } }
+  }
+  gkPushing=false;
+}
+async function gkLoadAll(){
+  let changed=false;
+  for(const t of ['anggota','pengurus']){
+    const d=(await gkApi({a:'adminList',t,pass:ADMIN_PASS})).data.sort((a,b)=>b.id-a.id);
+    const j=JSON.stringify(d), k=GK_TBL()[t];
+    if(localStorage.getItem(k)!==j){ localStorage.setItem(k,j); changed=true; }
+    SNAP[t]=snapOf(d);
+  }
+  return changed;
+}
+async function gkPull(){
+  if(!isLoggedIn||gkPushing||QUEUE.length||document.hidden||document.querySelector('.modal-overlay.open')) return;
+  try{ if(await gkLoadAll()){ render(); const a=document.querySelector('.screen.active'); if(a) sw(a.id.replace('screen-','')); } }catch(e){}
+}
+async function doLogin(){
+  const u=document.getElementById('login-user').value.trim(), p=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-err'); err.style.display='none';
+  let ok=false;
+  if(GK_ON()){
+    if(u===DEFAULT_USER){ ADMIN_PASS=p; try{ await gkLoadAll(); ok=true; }catch(e){ err.textContent='❌ '+(e.server?'Username atau password salah.':'Tidak bisa terhubung ke server.'); } }
+    else err.textContent='❌ Username atau password salah.';
+  } else { ok=(u===DEFAULT_USER&&p===getPass()); err.textContent='❌ Username atau password salah.'; }
+  if(!ok){ err.style.display='block'; return; }
+  isLoggedIn=true;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  render();
+  if(GK_ON()&&!gkTimer) gkTimer=setInterval(gkPull,30000);
+}
+async function gantiPassword(){
+  const lama=document.getElementById('pass-lama').value, baru=document.getElementById('pass-baru').value, konfirm=document.getElementById('pass-konfirm').value;
+  if(GK_ON()?lama!==ADMIN_PASS:lama!==getPass()){ toast('❌ Password lama salah!'); return; }
+  if(baru.length<6){ toast('⚠️ Password minimal 6 karakter!'); return; }
+  if(baru!==konfirm){ toast('⚠️ Konfirmasi password tidak cocok!'); return; }
+  if(GK_ON()){ try{ await gkApi({a:'setPass',t:'anggota',pass:ADMIN_PASS,newPass:baru}); ADMIN_PASS=baru; }catch(e){ toast('❌ '+e.message); return; } }
+  else localStorage.setItem(PASS_KEY,baru);
+  ['pass-lama','pass-baru','pass-konfirm'].forEach(id=>document.getElementById(id).value='');
+  toast('✅ Password berhasil diubah!');
+}
+
+gkDate('m-ttl-tgl','lahir');
+</script>
+</body>
+</html>
