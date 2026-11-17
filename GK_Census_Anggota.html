@@ -476,6 +476,7 @@ function cekAnggota(){
     document.getElementById('sf-meta').textContent = 'Pastikan no. anggota benar, atau hubungi admin.';
     sf.style.background='#fff3cd'; sf.style.borderColor='#ffc107';
     document.getElementById('sf-name').style.color='#856404';
+    return;
   }
   sf.style.display='block'; sf.style.background='#FCEBEB'; sf.style.borderColor='#F09595';
   document.getElementById('sf-name').textContent = k.nama;
@@ -490,9 +491,6 @@ function nextStep(n){
   if(n===2){
     const nama = document.getElementById('f-nama').value.trim();
     if(!nama){ toast('⚠️ Nama wajib diisi!'); return; }
-  }
-  if(n===3){
-    const hp = document.getElementById('f-hp').value.trim();
   }
   step = n;
   [1,2,3].forEach(i=>{
