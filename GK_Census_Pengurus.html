@@ -458,6 +458,7 @@ function cekPengurus(){
     box.className='sf-box show';
     box.style.cssText='display:block;background:#FFF8E1;border:1px solid #d4b84a;border-radius:12px;padding:13px;margin-bottom:10px';
     box.innerHTML=`<div style="font-size:11px;font-weight:700;color:#9a6800;text-transform:uppercase;margin-bottom:4px">Tidak ditemukan</div><div style="font-size:13px;color:#9a6800">Pastikan no. anggota benar atau hubungi admin kaderisasi.</div>`;
+    return;
   }
   box.className='sf-box show';
   box.style.cssText='display:block;background:#FCEBEB;border:1px solid #F09595;border-radius:12px;padding:13px;margin-bottom:10px';
@@ -476,7 +477,6 @@ function nextStep(n){
   }
   if(n===3){
     if(!document.getElementById('f-posisi').value){ toast('⚠️ Pilih posisi jabatan terlebih dahulu!'); return; }
-    if(!document.getElementById('f-tahun-masuk').value){ toast('⚠️ Tahun masuk pengurus wajib diisi!'); return; }
   }
   if(n===5){ kirimDaftar(); return; }
   curStep = n;
